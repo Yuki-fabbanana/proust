@@ -1,0 +1,123 @@
+require 'uri'
+require 'net/http'
+require 'openssl'
+require 'digest/md5'
+require 'date'
+require 'fileutils'
+
+class ProustsController < ApplicationController
+  skip_before_action:verify_authenticity_token
+
+  def show
+    # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
+    # p params
+    # 以下一文消しても大丈夫かも
+    # parse_url = URI.parse("https://audd.p.rapidapi.com/")
+
+    # url.query = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
+    # url = URI.parse("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{params}")
+
+
+    # getの場合
+    # params = URI.encode_www_form({url: 'https://audd.tech/example1.mp3'})
+    # p "-----------------"
+    # p parse_url
+    # url = URI("#{parse_url}?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&#{params}")
+    # p url
+
+#     binary_file = File.open("binary_file_path.bin", "rb")
+# image_file = File.open("image_file_path.png", "rb")
+# begin
+#   data = [
+#     # 通常のパラメータ
+#     # <input type="text" name="name1" value="value1"> のような値
+#     [ "name1", "value1" ],
+
+#     # ファイルを指定する場合
+#     # <input type="file" name="binary_file"> のような場合に相当する
+#     [ "binary_file", binary_file, { filename: "binary_file_path.bin" } ],
+
+#     # content_type も指定できる。
+#     [ "image_file", image_file, { filename: "image_file_path.png", content_type: "image/png" } ]
+#   ]
+
+
+    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    # binary_file = File.open("tmp/songs/yestaday.mp3", "w+")
+    # p binary_file.read
+    # binary_file.close
+    # p binary_file
+    # p "-----------------"
+    # postの場合
+    # request = Net::HTTP::Post.new(url)
+    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
+    # request["x-rapidapi-key"] = ''
+    # request["content-type"] = 'multipart/form-data; boundary=---011000010111000001101001'
+    # request.set_form(binary_file, "multipart/form-data")
+
+    # getの場合
+    # request = Net::HTTP::Get.new(url)
+    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
+    # request["x-rapidapi-key"] = ''
+
+    # response = http.request(request)
+    # puts response.read_body
+  end
+
+  def rec
+  end
+
+  def convert
+    file_test = params[:file]
+    file_name = Digest::MD5.hexdigest(Time.now.to_s)
+    wav_file_name = file_name + ".wav"
+    mp3_file_name = file_name + ".mp3"
+    wav_file_path = Rails.root.to_s + "/public/songs/" + wav_file_name
+    mp3_file_path = Rails.root.to_s + "/public/songs/" + mp3_file_name
+
+
+    # 以下文tmpfileにした方がいい
+    File.open(wav_file_path, 'wb') do |f|
+       f.write(file_test.tempfile.read)
+    end
+
+    system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
+
+
+    json = get_analtyices_song(mp3_file_name)
+
+  end
+
+
+private
+def get_analtyices_song(mp3_file_name)
+  # 以下一文あっているかわからず
+  if current_env == production
+    return_param = "timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics"
+    itunes_country_param = "us"
+    url_param = "https%3A%2F%2Faudd.tech%2Fsongs%2F" + mp3_file_name
+
+
+    url = URI("https://audd.p.rapidapi.com/?return=" + return_param + "&itunes_country=" + itunes_country_param + "&url=" + url_param)
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(url)
+    request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
+    request["x-rapidapi-key"] = '#{TODO}'
+
+    response = http.request(request)
+    puts response.read_body
+  else
+  
+  end
+end
+
+
+end

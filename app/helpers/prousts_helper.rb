@@ -1,0 +1,2 @@
+module ProustsHelper
+end
