@@ -4,6 +4,8 @@ require 'openssl'
 require 'digest/md5'
 require 'date'
 require 'fileutils'
+require 'aws-sdk'
+
 
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
@@ -89,7 +91,64 @@ class ProustsController < ApplicationController
     system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
 
 
-    json = get_analtyices_song(mp3_file_name)
+    # AWS upload
+    region = "ap-northeast-1"
+    Aws.config.update({
+    credentials: Aws::Credentials.new('#{TODO}', '#{TODO}')
+    })
+
+    s3 = Aws::S3::Resource.new(region: region)
+
+    file = "/vagrant/proust/public/songs/#{mp3_file_name}"
+    bucket = 'proust-songs-database'
+
+    # Get just the file name
+    name = File.basename(file)
+
+
+    # Create the object to upload
+    obj = s3.bucket(bucket).object(name)
+
+    # Upload it
+    obj.upload_file(file)
+
+    # Create a S3 client
+    client = Aws::S3::Client.new(region: region)
+
+    # オブジェクトの既定 ACL の設定
+    object_key = name
+    object_path = "http://#{bucket}.s3-ap-northeast-1.amazonaws.com/#{object_key}"
+
+
+    client.put_object_acl({
+    acl: "public-read",
+    bucket: bucket,
+    key: object_key,
+    })
+
+
+    # audDからjsonを取得
+    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{object_path}")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
+    request["x-rapidapi-key"] = '#{TODO}'
+
+    response = http.request(request)
+    p "-----------------"
+    puts response.read_body
+    p "-----------------"
+
+    @result = JSON.parse(response.body)
+        # 表示用の変数に結果を格納
+  
+
+    render json: @result
+    # json = get_analtyices_song(mp3_file_name)
 
   end
 
