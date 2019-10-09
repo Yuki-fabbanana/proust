@@ -1,108 +1,69 @@
-  <style>
-    /* Always set the map height explicitly to define the size of the div
-     * element that contains the map. */
-    #map {
-      height: 100%;
-    }
-    /* Optional: Makes the sample page fill the window. */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-  <body>
-    <div id="map"></div>
-    <script>
-      var map;
-      var tokyo = {lat: 35.681167, lng: 139.767052}
-      var infoWindow;
-      var marker;
-      function initMap() {
-          'use strict';
-          var map = document.getElementById('map');
-      //   map = new google.maps.Map(map, {
-      //     center: tokyo,
-      //     zoom: 5,
-      //     clickableIcons: false
-      //   });
+<style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #map {
+    height: 100%;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<div id="map"></div>
+<div id="address"></div>
+<script>
+  function initMap() {
+    'use strict';
+    if( navigator.geolocation ){// 現在位置を取得できる場合の処理
+    // 現在位置を取得する
+      navigator.geolocation.getCurrentPosition(success, error, option);
+      /*現在位置が取得できた時に実行*/
+      function success(position){
+        var data = position.coords;
+        // 必要な緯度経度だけ取得
+        var lat = data.latitude;
+        var lng = data.longitude;
+        //Google Mapsで住所を取得
+        var geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(lat, lng);
+        geocoder.geocode({'latLng': latlng}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            // document.getElementById('address').innerHTML = results[0].formatted_address;
+            var address = results[0].formatted_address;
 
-      //   map.addListener('click', function(e) {
-      //     var marker = new google.maps.Marker({
-      //       position: e.latLng,
-      //       map: this,
-      //       animation: google.maps.Animation.DROP
-      //     });
-      //     var infoWindow = new google.maps.InfoWindow({
-      //       content: e.latLng.toString()
-      //     });
-      //     marker.addListener('click', function() {
-      //       infoWindow.open(map, marker);
-      //     });
-      //   });
-
-        //Geolocation
-
-        if (!navigator.geolocation) {
-          alert('Geolocation not supported');
-          return;
-        }
-
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var gMap = new google.maps.Map(map, {
-            center: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            },
-            zoom: 5
-          });
-
-          var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-          var marker = new google.maps.Marker({
-            map: gMap,
-            position: latlng
-          });
-
-        }, function() {
-          alert('Geolocation failed!');
-          return;
+            window.location.href = `http://localhost:3000/prousts/new?address=${address}`;
+            }
+          else {
+            alert("エラー" + status);
+          }
         });
-
-        // infoWindow = new google.maps.InfoWindow({
-        //   position: tokyo,
-        //   content: 'Hello! Hello! Hello! Hello! Hello!'
-        // });
-
-        // infoWindow.open(map);
-
-        // map.addListener('click', function(e) {
-        //   var marker = new google.maps.Marker({
-        //     position: e.latLng,
-        //     map: map,
-        //     title: e.latLng.toString(),
-        //     animation: google.maps.Animation.DROP
-        //   });
-          // マーカーを消す
-          // marker.addListener('click', function() {
-          //   this.setMap(null)
-          // });
-        // });
-
-        // デフォルトでマーカーを設置
-        // marker = new google.maps.Marker({
-        //   position: tokyo,
-        //   map: map,
-        //   title: 'Tokyo!'
-        // });
-
-        // map.addListener('click', function(e){
-        //   console.log(e.latLng.lat());
-        //   console.log(e.latLng.lng());
-        //   console.log(e.latLng.toString());
-        //   this.setCenter(e.latLng);
-        // });
       }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDuZaPVeDeOgLEu9I875ZvD0abh7R7KGtM&callback=initMap"
-    async defer></script>
-  </body>
+      /*現在位置の取得に失敗した時に実行*/
+      function error(error){
+        var errorMessage = {
+        0: "原因不明のエラーが発生しました。",
+        1: "位置情報が許可されませんでした。",
+        2: "位置情報が取得できませんでした。",
+        3: "タイムアウトしました。",
+        } ;
+        //とりあえずalert
+        alert( errorMessage[error.code]);
+      }
+      // オプション(省略可)
+      var option = {
+        "enableHighAccuracy": false,
+        "timeout": 100 ,
+        "maximumAge": 100 ,
+      } ;
+    } else {// 現在位置を取得できない場合の処理
+    //とりあえずalert
+      alert("あなたの端末では、現在位置を取得できません。");
+    }
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=#{TODO}&callback=initMap"
+async defer>
+</script>

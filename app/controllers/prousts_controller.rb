@@ -10,6 +10,21 @@ require 'aws-sdk'
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
 
+  def new
+
+    @params_post_info = Post.new
+
+    @params_post_address = address_params["address"]
+    @params_post_address = address_params["artist"]
+    @params_post_album = address_params["album"]
+    @params_post_title = address_params["title"]
+
+  end
+
+  def create
+  end
+
+
   def show
     # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
     # p params
@@ -143,40 +158,70 @@ class ProustsController < ApplicationController
     puts response.read_body
     p "-----------------"
 
-    @result = JSON.parse(response.body)
-        # 表示用の変数に結果を格納
-  
+    # 詳細見る必要あり
+    @result = JSON.parse(response.read_body)
+    # puts @result
+    #     # 表示用の変数に結果を格納
+        # @artist = @result[:result]["artist"]
+    #     @address1 = @result["result"]["title"]
+    #     @address2 = @result["result"]["album"]
+    # byebug
 
-    render json: @result
+
+    render :json => @result
+
     # json = get_analtyices_song(mp3_file_name)
 
   end
 
 
+# private
+# def get_analtyices_song(mp3_file_name)
+#   # 以下一文あっているかわからず
+#   if current_env == production
+#     return_param = "timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics"
+#     itunes_country_param = "us"
+#     url_param = "https%3A%2F%2Faudd.tech%2Fsongs%2F" + mp3_file_name
+
+
+#     url = URI("https://audd.p.rapidapi.com/?return=" + return_param + "&itunes_country=" + itunes_country_param + "&url=" + url_param)
+
+    # http = Net::HTTP.new(url.host, url.port)
+    # http.use_ssl = true
+    # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    # request = Net::HTTP::Get.new(url)
+    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
+    # request["x-rapidapi-key"] = '#{TODO}'
+
+
+#     response = http.request(request)
+#     puts response.read_body
+#   else
+
+#   end
+# end
+
 private
-def get_analtyices_song(mp3_file_name)
-  # 以下一文あっているかわからず
-  if current_env == production
-    return_param = "timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics"
-    itunes_country_param = "us"
-    url_param = "https%3A%2F%2Faudd.tech%2Fsongs%2F" + mp3_file_name
 
-
-    url = URI("https://audd.p.rapidapi.com/?return=" + return_param + "&itunes_country=" + itunes_country_param + "&url=" + url_param)
-
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Get.new(url)
-    request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
-    request["x-rapidapi-key"] = '#{TODO}'
-
-    response = http.request(request)
-    puts response.read_body
-  else
-  
+def address_params
+    params.permit(
+        :address,
+        :artist,
+        :title,
+        :album
+        # :release_date, 
+        # :, 
+        # :password_confirmation,
+        # addresses_attributes: [
+        #       :postal_code_1, 
+        #       :postal_code_2, 
+        #       :address, 
+        #       :telephone_number, 
+        #       :last_name, 
+        #       :first_name, 
+        #       :is_main]
+      )
   end
-end
 
 
 end
