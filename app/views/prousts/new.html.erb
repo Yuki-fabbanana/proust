@@ -1,3 +1,35 @@
-<%= @params_post_info %>
+<%#= @params_post_info %>
 
 
+<%= form_with(model: @params_post_info, url: proust_path, local: true) do |f| %>
+
+  <%= f.label :songs_title %>
+  <%= f.hidden_field :songs_title, autofocus: true, :value => @params_post_songs_title %>
+  <%= @params_post_songs_title %><br>
+
+  <%= f.label :album %>
+  <%= f.hidden_field :album, :value => @params_post_album %>
+  <%= @params_post_album %><br>
+
+  <%= f.label :artist %>
+  <%= f.hidden_field :artist, :value => @params_post_artist %>
+  <%= @params_post_artist %><br>
+
+  <%= f.label :address %>
+  <%= f.hidden_field :address, :value => @params_post_address %>
+  <%= @params_post_address %><br>
+
+  <%= f.label :latitude %>
+  <%= f.hidden_field :latitude, :value => @params_post_latitude %>
+  <%= @params_post_latitude %><br>
+
+  <%= f.label :longitude %>
+  <%= f.hidden_field :longitude, :value => @params_post_longitude %>
+  <%= @params_post_longitude %><br>
+
+  <%= f.label :body, "text" %>
+  <%= f.text_area :body %><br>
+
+<%= f.submit "投稿", :class => "btn btn-primary" %><br>
+
+<% end %>

@@ -32,7 +32,6 @@
           if (status == google.maps.GeocoderStatus.OK) {
             // document.getElementById('address').innerHTML = results[0].formatted_address;
             var address = results[0].formatted_address;
-
             window.location.href = `http://localhost:3000/prousts/new?address=${address}`;
             }
           else {

@@ -15,13 +15,26 @@ class ProustsController < ApplicationController
     @params_post_info = Post.new
 
     @params_post_address = address_params["address"]
-    @params_post_address = address_params["artist"]
+    @params_post_latitude = address_params["latitude"]
+    @params_post_longitude = address_params["longitude"]
+    @params_post_artist = address_params["artist"]
     @params_post_album = address_params["album"]
-    @params_post_title = address_params["title"]
+    @params_post_songs_title = address_params["songs_title"]
 
   end
 
   def create
+    post = Post.new(post_params)
+    post.save!
+    redirect_to proust_rec_path
+  end
+
+  def map
+    # gon.post_latitude = Post.last.latitude.to_f
+    # gon.post_longitude = Post.last.longitude.to_f
+    gon.posts = Post.all
+    # devise実装したらこっち
+    # gon.posts = Post.where(user_id: current_user.id)
   end
 
 
@@ -143,7 +156,7 @@ class ProustsController < ApplicationController
 
 
     # audDからjsonを取得
-    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{object_path}")
+    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&market=ja&itunes_country=us&url=#{object_path}")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -204,24 +217,40 @@ class ProustsController < ApplicationController
 private
 
 def address_params
-    params.permit(
-        :address,
-        :artist,
-        :title,
-        :album
-        # :release_date, 
-        # :, 
-        # :password_confirmation,
-        # addresses_attributes: [
-        #       :postal_code_1, 
-        #       :postal_code_2, 
-        #       :address, 
-        #       :telephone_number, 
-        #       :last_name, 
-        #       :first_name, 
-        #       :is_main]
-      )
-  end
+  params.permit(
+      :address,
+      :latitude,
+      :longitude,
+      :artist,
+      :songs_title,
+      :album
+      # :release_date,
+      # :,
+      # :password_confirmation,
+      # addresses_attributes: [
+      #       :postal_code_1,
+      #       :postal_code_2,
+      #       :address,
+      #       :telephone_number,
+      #       :last_name,
+      #       :first_name,
+      #       :is_main]
+    )
+end
+
+def post_params
+  params.require(:post).permit(
+    :artist,
+    :songs_title,
+    :album,
+    :address,
+    :latitude,
+    :longitude,
+    :body
+  )
+end
+
+
 
 
 end
