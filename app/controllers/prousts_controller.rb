@@ -134,7 +134,7 @@ class ProustsController < ApplicationController
     # AWS upload
     region = "ap-northeast-1"
     Aws.config.update({
-    credentials: Aws::Credentials.new('#{TODO}', '#{TODO}')
+    credentials: Aws::Credentials.new(Rails.application.credentials.aws[:access_key_id],  Rails.application.credentials.aws[:secret_access_key])
     })
 
     s3 = Aws::S3::Resource.new(region: region)
@@ -175,8 +175,8 @@ class ProustsController < ApplicationController
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     request = Net::HTTP::Get.new(url)
-    request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
-    request["x-rapidapi-key"] = '#{TODO}'
+    request["x-rapidapi-host"] = Rails.application.credentials.audd[:x_rapidapi_host]
+    request["x-rapidapi-key"] = Rails.application.credentials.audd[:x_rapidapi_key]
 
     response = http.request(request)
     p "-----------------"
