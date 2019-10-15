@@ -60,7 +60,8 @@ node_modules/
 /public/packs
 /public/packs-test
 /public/assets
-/public/songs
+/public/songs/*.wav
+/public/songs/*.mp3
 
 # Ignore yarn files
 /yarn-error.log
