@@ -25,20 +25,23 @@ class ProustsController < ApplicationController
 
   def create
     post = Post.new(post_params)
+    post.user_id = current_user.id
     post.save!
-    redirect_to proust_rec_path
+    redirect_to map_path
   end
 
   def map
     # gon.post_latitude = Post.last.latitude.to_f
     # gon.post_longitude = Post.last.longitude.to_f
-    gon.posts = Post.all
+    gon.posts = Post.where(user_id: current_user.id)
     # devise実装したらこっち
     # gon.posts = Post.where(user_id: current_user.id)
   end
 
 
   def show
+
+    @post = Post.find(params[:id])
     # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
     # p params
     # 以下一文消しても大丈夫かも
@@ -99,6 +102,15 @@ class ProustsController < ApplicationController
     # puts response.read_body
   end
 
+  def common_posts_index
+    songs_title = Post.find(params[:id]).songs_title
+    gon.common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
+  end
+
+  def common_posts_show
+    @post = Post.find_by(id: params[:id])
+  end
+
   def rec
   end
 
@@ -156,7 +168,7 @@ class ProustsController < ApplicationController
 
 
     # audDからjsonを取得
-    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&market=ja&itunes_country=us&url=#{object_path}")
+    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{object_path}")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -218,6 +230,7 @@ private
 
 def address_params
   params.permit(
+      :user_id,
       :address,
       :latitude,
       :longitude,

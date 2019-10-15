@@ -1,159 +1,637 @@
+<%= render "shared/header_user_after_signin" %>
 <style>
   #sample {
-    height: 100vh;
+    height: 94vh;
   }
+
+  .info-window {
+
+  }
+
+  .nav-map {
+    position: absolute;
+    z-index: 1;
+    top: 250px;
+    left: 0;
+  }
+
+  .nav-time {
+    position: absolute;
+    z-index: 1;
+    top: 300px;
+    left: 0;
+  }
+
+  .nav-pills .nav-link {
+    border-radius: 0 !important;
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-link {
+    padding-left: 12px !important;
+    padding-top: 7px;
+  }
+
+  .rec-button {
+    position: absolute;
+    z-index: 1;
+    bottom: 60px;
+    left: 60px;
+  }
+
+/* The loader container */
+.loader {
+  position: absolute;
+  bottom: 8vh;
+  left: 20vh;
+
+  width: 200px;
+  height: 200px;
+
+  margin-top: -100px;
+  margin-left: -100px;
+
+  perspective: 200px;
+  /*transform-type: preserve-3d;*/
+  z-index: 5;
+ }
+
+
+/* The dot */
+.dot {
+  z-index: 5;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 120px;
+  height: 120px;
+  
+  margin-top: -60px;
+  margin-left: -60px;
+  
+  border-radius: 100px;
+  border: 40px outset #1e3f57;
+
+  /*transform-type: preserve-3d;*/
+  transform-origin: 50% 50%;
+  
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  
+  background-color: transparent;
+  
+  animation: dot1 1000ms cubic-bezier(.49,.06,.43,.85) infinite;
+}
+
+.dot:nth-child(2) {
+  width: 140px;
+  height: 140px;
+  
+  margin-top: -70px;
+  margin-left: -70px;
+  
+  border-width: 30px;
+  border-color: #447891;
+  
+  animation-name: dot2;
+  animation-delay: 75ms;
+  
+  box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+}
+
+.dot:nth-child(3) {
+  width: 160px;
+  height: 160px;
+  
+  margin-top: -80px;
+  margin-left: -80px;
+  
+  border-width: 20px;
+  border-color: #6bb2cd;
+  
+  animation-name: dot3;
+  animation-delay: 150ms;
+  
+  box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+}
+
+@keyframes dot1 {
+  0% {
+    border-color: #1e3f57;
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+  50% {
+    border-color: #1e574f;
+    transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px);
+  }
+  100% {
+    border-color: #1e3f57;
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+}
+
+@keyframes dot2 {
+  0% {
+    border-color: #447891;
+    box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, 0.2);
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+  50% {
+    border-color: #449180;
+    box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.8);
+    transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px);
+  }
+  100% {
+    border-color: #447891;
+    box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, 0.2);
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+}
+
+@keyframes dot3 {
+  0% {
+    border-color: #6bb2cd;
+    box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+  50% {
+    border-color: #6bcdb2;
+    box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.8);
+    transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px);
+  }
+  100% {
+    border-color: #6bb2cd;
+    box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+    transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  }
+}
+
+/* stay */
+
+.rec {
+  position: absolute;
+  bottom: 8vh;
+  left: 20vh;
+
+  width: 200px;
+  height: 200px;
+
+  margin-top: -100px;
+  margin-left: -100px;
+
+  perspective: 200px;
+  /*transform-type: preserve-3d;*/
+  z-index: 5;
+ }
+
+
+/* The dot */
+.stay_dot {
+  z-index: 5;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 120px;
+  height: 120px;
+  
+  margin-top: -60px;
+  margin-left: -60px;
+  
+  border-radius: 100px;
+  border: 40px outset #1e3f57;
+
+  /*transform-type: preserve-3d;*/
+  transform-origin: 50% 50%;
+  
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+  
+  background-color: transparent;
+  
+  /*animation: dot1 1000ms cubic-bezier(.49,.06,.43,.85) infinite;*/
+}
+
+.stay_dot:nth-child(2) {
+  width: 140px;
+  height: 140px;
+  
+  margin-top: -70px;
+  margin-left: -70px;
+  
+  border-width: 30px;
+  border-color: #447891;
+  
+  /*animation-name: dot2;
+  animation-delay: 75ms;*/
+  
+  box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+}
+
+.stay_dot:nth-child(3) {
+  width: 160px;
+  height: 160px;
+  
+  margin-top: -80px;
+  margin-left: -80px;
+  
+  border-width: 20px;
+  border-color: #6bb2cd;
+  
+  /*animation-name: dot3;
+  animation-delay: 150ms;*/
+  
+  box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.1);
+  transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+}
+
 </style>
-<div id="sample"></div>
 
-<script>
-// var map;
-// var marker;
-// var center = {
-//   lat: 34.7019399, // 緯度
-//   lng: 135.51002519999997 // 経度
-// };
-// function initMap() {
-//   map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
-//     center: center, // 地図の中心を指定
-//     zoom: 5 // 地図のズームを指定
-//   });
+<ul class="nav nav-pills" id="myTab" role="tablist">
+  <li class="nav-item nav-map bg-white">
+    <a class="nav-link active" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">
+      <i class="fas fa-map-marker-alt"></i>
+    </a>
+  </li>
+  <li class="nav-item nav-time bg-white">
+    <a class="nav-link" id="time-tab" data-toggle="tab" href="#time" role="tab" aria-controls="time" aria-selected="true">
+      <i class="far fa-clock"></i>
+    </a>
+  </li>
+</ul>
 
-//   marker = new google.maps.Marker({ // マーカーの追加
-//         position: center, // マーカーを立てる位置を指定
-//       map: map // マーカーを立てる地図を指定
-//    });
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="map" role="tabpanel" aria-labelledby="map-tab">
+    <div id="sample"></div>
+  </div>
+  <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
 
-//   infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
-//         content: '<div class="sample">TAM 大阪</div>' // 吹き出しに表示する内容
-//   });
-//   marker.addListener('click', function() { // マーカーをクリックしたとき
-//     infoWindow.open(map, marker); // 吹き出しの表示
-//   });
+    
+
+  </div>
+</div>
+<div class="loader" id="animation" style="display: none;">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<div class="rec" id="stay" onClick="startRec();">
+  <div class="stay_dot"></div>
+  <div class="stay_dot"></div>
+  <div class="stay_dot"></div>
+</div>
+
+<!-- <input class="rec-button" type="button" id="recBtn" value="Rec" onClick="startRec();" style="display:block;"/> -->
+    <script>
+    // var map;
+    // var marker;
+    // var center = {
+    //   lat: 34.7019399, // 緯度
+    //   lng: 135.51002519999997 // 経度
+    // };
+    // function initMap() {
+    //   map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
+    //     center: center, // 地図の中心を指定
+    //     zoom: 5 // 地図のズームを指定
+    //   });
+
+    //   marker = new google.maps.Marker({ // マーカーの追加
+    //         position: center, // マーカーを立てる位置を指定
+    //       map: map // マーカーを立てる地図を指定
+    //    });
+
+    //   infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
+    //         content: '<div class="sample">TAM 大阪</div>' // 吹き出しに表示する内容
+    //   });
+    //   marker.addListener('click', function() { // マーカーをクリックしたとき
+    //     infoWindow.open(map, marker); // 吹き出しの表示
+    //   });
 
 
-///////実験///////実験///////実験///////実験///////実験///////実験///////実験///////
-var map;
-var marker = [];
-var infoWindow = [];
-var postInfomation = {};
+    ///////実験///////実験///////実験///////実験///////実験///////実験///////実験///////
+    var map;
+    var marker = [];
+    var infoWindow = [];
+    var postInfomation = {};
 
-// var markerData = []
-// // for文
-// for (var i = 0; i < gon.posts.length; i++ ) {
-//   var postInfomation
+    // var markerData = []
+    // // for文
+    // for (var i = 0; i < gon.posts.length; i++ ) {
+    //   var postInfomation
 
-//   markerData.push();
-// }
+    //   markerData.push();
+    // }
 
-////////
+    ////////
 
-var markerData = [ // マーカーを立てる場所名・緯度・経度
-  {
-       addr: 'TAM 東京',
-       lat: 35.6954806,
-        lng: 139.76325010000005,
-        // icon: 'tam.png' // TAM 東京のマーカーだけイメージを変更する
- }, {
-        addr: '小川町駅',
-     lat: 35.6951212,
-        lng: 139.76610649999998
- }, {
-        addr: '淡路町駅',
-     lat: 35.69496,
-      lng: 139.76746000000003
- }, {
-        addr: '御茶ノ水駅',
-        lat: 35.6993529,
-        lng: 139.76526949999993
- }, {
-        addr: '神保町駅',
-     lat: 35.695932,
-     lng: 139.75762699999996
- }
- // , {
- //        addr: gon.posts.address,
- //       lat: parseFloat(gon.posts.latitude),
- //     lng: parseFloat(gon.posts.longitude)
- // }
-];
+    var markerData = [ // マーカーを立てる場所名・緯度・経度
+      {
+           addr: 'TAM 東京',
+           lat: 35.6954806,
+            lng: 139.76325010000005,
+            // icon: 'tam.png' // TAM 東京のマーカーだけイメージを変更する
+     }, {
+            addr: '小川町駅',
+         lat: 35.6951212,
+            lng: 139.76610649999998
+     }, {
+            addr: '淡路町駅',
+         lat: 35.69496,
+          lng: 139.76746000000003
+     }, {
+            addr: '御茶ノ水駅',
+            lat: 35.6993529,
+            lng: 139.76526949999993
+     }, {
+            addr: '神保町駅',
+         lat: 35.695932,
+         lng: 139.75762699999996
+     }
+     // , {
+     //        addr: gon.posts.address,
+     //       lat: parseFloat(gon.posts.latitude),
+     //     lng: parseFloat(gon.posts.longitude)
+     // }
+    ];
 
-debugger
-function initMap() {
- // 地図の作成
-    var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']}); // 緯度経度のデータ作成
-   map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
-     center: mapLatLng, // 地図の中心を指定
-      zoom: 12 // 地図のズームを指定
-   });
+    function initMap() {
+     // 地図の作成
+      var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']}); // 緯度経度のデータ作成
+      map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
+         center: mapLatLng, // 地図の中心を指定
+          zoom: 12 // 地図のズームを指定
+      });
 
- // マーカー毎の処理
- // for (var i = 0; i < markerData.length; i++) {
- //        markerLatLng = new google.maps.LatLng({lat: markerData[i]['lat'], lng: markerData[i]['lng']}); // 緯度経度のデータ作成
- //        console.log(markerLatLng);
- //        marker[i] = new google.maps.Marker({ // マーカーの追加
- //         position: markerLatLng, // マーカーを立てる位置を指定
- //            map: map // マーカーを立てる地図を指定
- //       });
+     // マーカー毎の処理
+     // for (var i = 0; i < markerData.length; i++) {
+     //        markerLatLng = new google.maps.LatLng({lat: markerData[i]['lat'], lng: markerData[i]['lng']}); // 緯度経度のデータ作成
+     //        console.log(markerLatLng);
+     //        marker[i] = new google.maps.Marker({ // マーカーの追加
+     //         position: markerLatLng, // マーカーを立てる位置を指定
+     //            map: map // マーカーを立てる地図を指定
+     //       });
 
- //     infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
- //         content: '<div class="sample">' + markerData[i]['addr'] + '</div>' // 吹き出しに表示する内容
- //       });
+     //     infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+     //         content: '<div class="sample">' + markerData[i]['addr'] + '</div>' // 吹き出しに表示する内容
+     //       });
 
- //     markerEvent(i); // マーカーにクリックイベントを追加
- // }
+     //     markerEvent(i); // マーカーにクリックイベントを追加
+     // }
 
- ///////////////
- for (var i = 0; i < gon.posts.length; i++) {
-        console.log(parseFloat(gon.posts[i]['latitude']));
-        console.log(parseFloat(gon.posts[i]['longitude']));
+     ///////////////
+      for (var i = 0; i < gon.posts.length; i++) {
         markerLatLng = new google.maps.LatLng({ lat: parseFloat(gon.posts[i]['latitude']), lng: parseFloat(gon.posts[i]['longitude']) }); // 緯度経度のデータ作成
-        console.log(markerLatLng);
         marker[i] = new google.maps.Marker({ // マーカーの追加
-         position: markerLatLng, // マーカーを立てる位置を指定
-            map: map // マーカーを立てる地図を指定
-       });
+          position: markerLatLng, // マーカーを立てる位置を指定
+          map: map // マーカーを立てる地図を指定
+        });
 
-     infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-         content: '<div class="sample">' + '<h1>' + gon.posts[i]['address'] + '</h1>' + '<h1 id="firstHeading" class="firstHeading">Tokyoだべ</h1>' + '</div>' // 吹き出しに表示する内容
-       });
+        infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+          content: '<div class="info-window">' + '<p>' + gon.posts[i]['created_at'] + '</p>' + `<a href='/prousts/${gon.posts[i]["id"]}/show'>` + gon.posts[i]['songs_title'] + '</a>' + '<p>' + gon.posts[i]['address'] + '</p>' + '<p>' + gon.posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
+        });
 
-     markerEvent(i); // マーカーにクリックイベントを追加
- }
+         markerEvent(i); // マーカーにクリックイベントを追加
+      }
 
 
- //////////////
+     //////////////
 
-   // marker[0].setOptions({// TAM 東京のマーカーのオプション設定
-   //      icon: {
-   //       url: markerData[0]['icon']// マーカーの画像を変更
-   //     }
-   // });
-}
-
-// マーカーにクリックイベントを追加 closeなしver
-// function markerEvent(i) {
-//     marker[i].addListener('click', function() { // マーカーをクリックしたとき
-//       infoWindow[i].open(map, marker[i]); // 吹き出しの表示
-//   });
-// }
-
-// マーカーにクリックイベントを追加
-var currentInfoWindow = null;
-function markerEvent(i) {
-  marker[i].addListener('click', function() { // マーカーをクリックしたとき
-    if (currentInfoWindow) {
-      currentInfoWindow.close();
+       // marker[0].setOptions({// TAM 東京のマーカーのオプション設定
+       //      icon: {
+       //       url: markerData[0]['icon']// マーカーの画像を変更
+       //     }
+       // });
     }
-    //情報ウィンドウを開く
-    infoWindow[i].open(map, marker[i]); // 吹き出しの表示
-    currentInfoWindow = infoWindow[i];
-  });
-}
-///////実験///////実験///////実験///////実験///////実験///////実験///////実験///////
-// }
-</script>
 
-</script>
-  <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=#{TODO}&callback=initMap"
-async defer>
+    // マーカーにクリックイベントを追加 closeなしver
+    // function markerEvent(i) {
+    //     marker[i].addListener('click', function() { // マーカーをクリックしたとき
+    //       infoWindow[i].open(map, marker[i]); // 吹き出しの表示
+    //   });
+    // }
+
+    // マーカーにクリックイベントを追加
+    var currentInfoWindow = null;
+    function markerEvent(i) {
+      marker[i].addListener('click', function() { // マーカーをクリックしたとき
+        if (currentInfoWindow) {
+          currentInfoWindow.close();
+        }
+        //情報ウィンドウを開く
+        infoWindow[i].open(map, marker[i]); // 吹き出しの表示
+        currentInfoWindow = infoWindow[i];
+      });
+    }
+    ///////実験///////実験///////実験///////実験///////実験///////実験///////実験///////
+    // }
+    initMap();
+
+
+
+    /////////////////////////レコーディング///////////////////////////////
+    let audio_sample_rate = null;
+    let scriptProcessor = null;
+    let audioContext = null;
+
+    // audio data
+    let audioData = [];
+    let bufferSize = 1024;
+
+
+    let saveAudio = function () {
+
+      var blob = exportWAV(audioData);
+
+        var fd = new FormData();
+        fd.append('file', blob, (new Date()).getTime() + ".wav");
+
+        $(document)
+          .ajaxStop(function() {
+            $('#animation').hide();
+            $('#stay').show();
+          });
+
+        $.ajax({
+          url:'http://localhost:3000/prousts/convert',
+          type:'POST',
+          data:fd,
+          contentType: false,
+          processData: false,
+        })
+
+        // Ajaxリクエストが成功した時発動
+        .done( (data) => {
+
+          console.log(data);
+          getCurrentPosition(data);
+          alert("A");
+        })
+        // Ajaxリクエストが失敗した時発動
+        .fail( (data) => {
+            alert("B");
+        })
+        // Ajaxリクエストが成功・失敗どちらでも発動
+        .always( (data) => {
+
+        });
+
+    }
+
+    let exportWAV = function (audioData) {
+
+      let encodeWAV = function (samples, sampleRate) {
+        let buffer = new ArrayBuffer(44 + samples.length * 2);
+        let view = new DataView(buffer);
+
+        let writeString = function (view, offset, string) {
+          for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+          }
+        };
+
+        let floatTo16BitPCM = function (output, offset, input) {
+          for (let i = 0; i < input.length; i++ , offset += 2) {
+            let s = Math.max(-1, Math.min(1, input[i]));
+            output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+          }
+        };
+
+        writeString(view, 0, 'RIFF');  // RIFFヘッダ
+        view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
+        writeString(view, 8, 'WAVE'); // WAVEヘッダ
+        writeString(view, 12, 'fmt '); // fmtチャンク
+        view.setUint32(16, 16, true); // fmtチャンクのバイト数
+        view.setUint16(20, 1, true); // フォーマットID
+        view.setUint16(22, 1, true); // チャンネル数
+        view.setUint32(24, sampleRate, true); // サンプリングレート
+        view.setUint32(28, sampleRate * 2, true); // データ速度
+        view.setUint16(32, 2, true); // ブロックサイズ
+        view.setUint16(34, 16, true); // サンプルあたりのビット数
+        writeString(view, 36, 'data'); // dataチャンク
+        view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
+        floatTo16BitPCM(view, 44, samples); // 波形データ
+
+        return view;
+      };
+
+      let mergeBuffers = function (audioData) {
+        let sampleLength = 0;
+        for (let i = 0; i < audioData.length; i++) {
+          sampleLength += audioData[i].length;
+        }
+        let samples = new Float32Array(sampleLength);
+        let sampleIdx = 0;
+        for (let i = 0; i < audioData.length; i++) {
+          for (let j = 0; j < audioData[i].length; j++) {
+            samples[sampleIdx] = audioData[i][j];
+            sampleIdx++;
+          }
+        }
+        return samples;
+      };
+
+      let dataview = encodeWAV(mergeBuffers(audioData), audio_sample_rate);
+      let audioBlob = new Blob([dataview], { type: 'audio/wav' });
+
+      return audioBlob;
+    };
+
+    // save audio data
+    var onAudioProcess = function (e) {
+      var input = e.inputBuffer.getChannelData(0);
+      var bufferData = new Float32Array(bufferSize);
+      for (var i = 0; i < bufferSize; i++) {
+        bufferData[i] = input[i];
+      }
+
+      audioData.push(bufferData);
+    };
+
+    // getusermedia
+    let handleSuccess = function (stream) {
+      audioContext = new AudioContext();
+      audio_sample_rate = audioContext.sampleRate;
+      scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
+      var mediastreamsource = audioContext.createMediaStreamSource(stream);
+      mediastreamsource.connect(scriptProcessor);
+      scriptProcessor.onaudioprocess = onAudioProcess;
+      scriptProcessor.connect(audioContext.destination);
+
+      setTimeout(function () {
+        mediastreamsource.disconnect(scriptProcessor);
+        scriptProcessor.disconnect(audioContext.destination);
+        saveAudio();
+      }, 5000);
+    };
+
+    function startRec(){
+      navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
+      var a = document.getElementById("stay");
+      a.style.display = "none";
+      var e = document.getElementById("animation");
+        e.style.display = "block";
+    }
+
+    function getCurrentPosition(data) {
+        if (data == null || data.result == null) {
+          alert("曲がヒットしませんでした");
+          return;
+        }
+        var songs_title = data.result.title;
+        var album = data.result.album;
+        var artist = data.result.apple_music.artistName;
+        'use strict';
+        console.log(4)
+        if( navigator.geolocation ){
+
+          navigator.geolocation.getCurrentPosition(success, error, option);
+          console.log(3)
+          /*現在位置が取得できた時に実行*/
+          function success(position){
+            var data = position.coords;
+            // 必要な緯度経度だけ取得
+            var lat = data.latitude;
+            var lng = data.longitude;
+            //Google Mapsで住所を取得
+            var geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(lat, lng);
+            console.log(1)
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                console.log(2)
+                // document.getElementById('address').innerHTML = results[0].formatted_address;
+                window.location.href = `/prousts/new?address=${results[0].formatted_address}&latitude=${lat}&longitude=${lng}&songs_title=${songs_title}&album=${album}&artist=${artist}`;
+                }
+              else {
+                alert("エラー" + status);
+              }
+            });
+          }
+        /*現在位置の取得に失敗した時に実行*/
+        function error(error){
+            var errorMessage = {
+            0: "原因不明のエラーが発生しました。",
+            1: "位置情報が許可されませんでした。",
+            2: "位置情報が取得できませんでした。",
+            3: "タイムアウトしました。",
+            } ;
+            //とりあえずalert
+            alert( errorMessage[error.code]);
+          }
+          // オプション(省略可)
+          var option = {
+            "enableHighAccuracy": false,
+            "timeout": 100 ,
+            "maximumAge": 100 ,
+          } ;
+        } else {// 現在位置を取得できない場合の処理
+        //とりあえずalert
+          alert("あなたの端末では、現在位置を取得できません。");
+        }
+    }
+    /////////////////////////////////////////////////
 </script>

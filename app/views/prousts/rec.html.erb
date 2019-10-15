@@ -1,9 +1,8 @@
-<h1>Web Audio APIのサンプル</h1>
-<p>実行と同時に録音がはじまり、10秒後に音声データを生成します</p>
-<input type="button" id="recBtn" value="Rec" onClick="startRec();" style="display:block;"/>
-<div id="target"></div>
-<div id="map"></div>
-<div id="address"></div>
+<%= render "shared/header_user_after_signin" %>
+
+<!-- <h1>Web Audio APIのサンプル</h1>
+<p>実行と同時に録音がはじまり、10秒後に音声データを生成します</p> -->
+
 <script>
 
     let audio_sample_rate = null;
@@ -133,12 +132,14 @@
       scriptProcessor.connect(audioContext.destination);
 
       setTimeout(function () {
+        mediastreamsource.disconnect(scriptProcessor);
+        scriptProcessor.disconnect(audioContext.destination);
         saveAudio();
       }, 5000);
     };
 
     // getUserMedia
-    recを押したら処理が走る
+    // recを押したら処理が走る
     function startRec(){
       navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
     }
@@ -146,13 +147,19 @@
 
 //////////////////google map API///////////////////////////////////////////////
     function initMap(data) {
+        if (data == null || data.result == null) {
+          alert("曲がヒットしませんでした");
+          return;
+        }
         var songs_title = data.result.title;
         var album = data.result.album;
         var artist = data.result.apple_music.artistName;
         'use strict';
+        console.log(4)
         if( navigator.geolocation ){// 現在位置を取得できる場合の処理
         // 現在位置を取得する
           navigator.geolocation.getCurrentPosition(success, error, option);
+          console.log(3)
           /*現在位置が取得できた時に実行*/
           function success(position){
             var data = position.coords;
@@ -162,10 +169,12 @@
             //Google Mapsで住所を取得
             var geocoder = new google.maps.Geocoder();
             var latlng = new google.maps.LatLng(lat, lng);
+            console.log(1)
             geocoder.geocode({'latLng': latlng}, function(results, status) {
               if (status == google.maps.GeocoderStatus.OK) {
+                console.log(2)
                 // document.getElementById('address').innerHTML = results[0].formatted_address;
-                window.location.href = `http://localhost:3000/prousts/new?address=${results[0].formatted_address}&latitude=${lat}&longitude=${lng}&songs_title=${songs_title}&album=${album}&artist=${artist}`;
+                window.location.href = `/prousts/new?address=${results[0].formatted_address}&latitude=${lat}&longitude=${lng}&songs_title=${songs_title}&album=${album}&artist=${artist}`;
                 }
               else {
                 alert("エラー" + status);
@@ -198,6 +207,7 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=#{TODO}&callback=initMap"
-async defer>
-  </script>
+  <input type="button" id="recBtn" value="Rec" onClick="startRec();" style="display:block;"/>
+  <div id="target"></div>
+  <div id="map"></div>
+  <div id="address"></div>

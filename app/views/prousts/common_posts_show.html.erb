@@ -1,5 +1,7 @@
 <%= render "shared/header_user_after_signin" %>
 
+<%= @post.user.id %>
+
 <%= @post.songs_title %>
 
 <%= @post.artist %>
@@ -8,4 +10,3 @@
 
 <%= @post.body %>
 
-<%= link_to "proust friend", "/prousts/#{@post.id}/common_posts_index" %>
