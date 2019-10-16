@@ -105,6 +105,7 @@ class ProustsController < ApplicationController
   def common_posts_index
     songs_title = Post.find(params[:id]).songs_title
     gon.common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
+    @common_posts= Post.find(params[:id])
   end
 
   def common_posts_show
