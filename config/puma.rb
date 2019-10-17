@@ -47,5 +47,4 @@ stdout_redirect(
   )
 
 # デーモン
-
 daemonize
