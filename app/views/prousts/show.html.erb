@@ -1,11 +1,32 @@
 <%= render "shared/header_user_after_signin" %>
 
-<%= @post.songs_title %>
+<div class="container mt-5">
+  <div style="padding: 30px; border-radius: 30px; background-color: #eee;">
+    <div class="row mb-3 justify-content-center">
+      <div class="col-lg-3">
+        <img src="<%= @post.artwork %>" width="200" height="200" alt="artiwork" style="border-radius: 100%;">
+      </div>
+      <div class="col-lg-7 col-lg-offset-2">
+        <p class="h2"><%= @post.songs_title %></p>
+        <p class="mb-1"><%= @post.artist %></p>
+        <% if @post.youtube_link %>
+          <p class="mb-0" style="font-size: 13px;">To Youtube</p>
+          <p class="mb-4"><a href='<%= @post.youtube_link %>'><%= @post.youtube_link %></a></p>
+        <% end %>
+        <p><%= @post.address %></p>
+        <% if @common_posts %>
+          <p><%= link_to "Proust Friend!", "/prousts/#{@post.id}/common_posts_index" %></p>
+        <% end %>
+      </div>
+    </div>
 
-<%= @post.artist %>
-
-<%= @post.address %>
-
-<%= @post.body %>
-
-<%= link_to "proust friend", "/prousts/#{@post.id}/common_posts_index" %>
+    <div class="card mx-auto" style="width: 500px; height: auto;">
+      <% if @post.post_image_id %>
+      <%= image_tag attachment_url(@post, :post_image, :fill, 500, 312, format: "jpg"), :style => "height: auto" %>
+      <% end %>
+      <div class="card-body">
+        <p class="card-text"><%= @post.body %></p>
+      </div>
+    </div>
+  </div>
+</div>

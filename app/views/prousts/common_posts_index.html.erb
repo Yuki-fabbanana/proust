@@ -115,7 +115,7 @@ function initMap() {
    });
 
  for (var i = 0; i < gon.common_posts.length; i++) {
-        markerLatLng = new google.maps.LatLng({ lat: parseFloat(gon.common_posts[i]['latitude']), lng: parseFloat(gon.common_posts[i]['longitude']) }); // 緯度経度のデータ作成
+        markerLatLng = new google.maps.LatLng({ lat: gon.common_posts[i]['latitude'], lng: gon.common_posts[i]['longitude'] }); // 緯度経度のデータ作成
         marker[i] = new google.maps.Marker({ // マーカーの追加
          position: markerLatLng, // マーカーを立てる位置を指定
             map: map // マーカーを立てる地図を指定

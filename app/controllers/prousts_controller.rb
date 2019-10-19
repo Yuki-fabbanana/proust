@@ -10,6 +10,9 @@ require 'aws-sdk'
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
 
+  def about
+  end
+
   def new
 
     @params_post_info = Post.new
@@ -20,7 +23,9 @@ class ProustsController < ApplicationController
     @params_post_artist = address_params["artist"]
     @params_post_album = address_params["album"]
     @params_post_songs_title = address_params["songs_title"]
-
+    @params_post_release_date = address_params["release_date"]
+    @params_post_artwork = address_params["artwork"]
+    @params_post_youtube_link = address_params["youtube_link"]
   end
 
   def create
@@ -31,17 +36,17 @@ class ProustsController < ApplicationController
   end
 
   def map
-    # gon.post_latitude = Post.last.latitude.to_f
-    # gon.post_longitude = Post.last.longitude.to_f
+    @posts = Post.where(user_id: current_user.id).order(created_at: :desc)
     gon.posts = Post.where(user_id: current_user.id)
-    # devise実装したらこっち
-    # gon.posts = Post.where(user_id: current_user.id)
+    gon.post = Post.last
   end
 
 
   def show
 
     @post = Post.find(params[:id])
+    songs_title = Post.find(params[:id]).songs_title
+    @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
     # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
     # p params
     # 以下一文消しても大丈夫かも
@@ -109,7 +114,7 @@ class ProustsController < ApplicationController
   end
 
   def common_posts_show
-    @post = Post.find_by(id: params[:id])
+    @post = Post.find(params[:id])
   end
 
   def rec
@@ -126,7 +131,7 @@ class ProustsController < ApplicationController
 
     # 以下文tmpfileにした方がいい
     File.open(wav_file_path, 'wb') do |f|
-       f.write(file_test.tempfile.read)
+       f.write(file_test.tempfile.read.force_encoding("UTF-8"))
     end
 
     system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
@@ -181,7 +186,7 @@ class ProustsController < ApplicationController
 
     response = http.request(request)
     p "-----------------"
-    puts response.read_body
+    puts response.read_body.force_encoding("UTF-8")
     p "-----------------"
 
     # 詳細見る必要あり
@@ -231,36 +236,32 @@ private
 
 def address_params
   params.permit(
-      :user_id,
       :address,
       :latitude,
       :longitude,
       :artist,
       :songs_title,
-      :album
-      # :release_date,
-      # :,
-      # :password_confirmation,
-      # addresses_attributes: [
-      #       :postal_code_1,
-      #       :postal_code_2,
-      #       :address,
-      #       :telephone_number,
-      #       :last_name,
-      #       :first_name,
-      #       :is_main]
+      :album,
+      :release_date,
+      :artwork,
+      :youtube_link
     )
 end
 
 def post_params
   params.require(:post).permit(
-    :artist,
-    :songs_title,
-    :album,
+    :user_id,
     :address,
     :latitude,
     :longitude,
-    :body
+    :artist,
+    :songs_title,
+    :album,
+    :release_date,
+    :artwork,
+    :youtube_link,
+    :body,
+    :post_image
   )
 end
 

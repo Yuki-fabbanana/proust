@@ -10,19 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_14_040323) do
+ActiveRecord::Schema.define(version: 2019_10_18_104333) do
 
   create_table "posts", force: :cascade do |t|
     t.string "songs_title"
     t.string "album"
     t.string "artist"
     t.string "address"
-    t.string "latitude"
-    t.string "longitude"
+    t.float "latitude"
+    t.float "longitude"
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.string "release_date"
+    t.string "artwork"
+    t.string "youtube_link"
+    t.string "post_image_id"
   end
 
   create_table "users", force: :cascade do |t|

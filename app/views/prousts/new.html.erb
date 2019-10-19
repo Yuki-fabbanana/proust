@@ -1,35 +1,50 @@
 <%= render "shared/header_user_after_signin" %>
 
+<div class="container-fluid">
+  <div class="row d-flex align-items-center new-post-wrapper">
+    <div class="col-xl-3">
+      <div class="image-wrapper text-center">
+        <img src='<%= @params_post_artwork %>' width="300" height="300" alt="artiwork" class="d-inline-block"><br>
+      </div>
+    </div>
+    <div class="col-xl-7 col-xl-offset-3">
+      <%= form_with(model: @params_post_info, url: proust_path, local: true, :class => 'post-form mx-auto') do |f| %>
 
-<%= form_with(model: @params_post_info, url: proust_path, local: true) do |f| %>
+        <div class="song-item">
+          <string class="border-bottom border-secondary song-title font-weight-bold">Song</string>
+          <%= f.hidden_field :songs_title, autofocus: true, :value => @params_post_songs_title %>
+          <p class="song-element"><%= @params_post_songs_title %></p>
 
-  <%= f.label :songs_title %>
-  <%= f.hidden_field :songs_title, autofocus: true, :value => @params_post_songs_title %>
-  <%= @params_post_songs_title %><br>
+          <%= f.hidden_field :artist, :value => @params_post_artist %>
+          <p class="song-element text-left"><%= @params_post_artist %></p>
 
-  <%= f.label :album %>
-  <%= f.hidden_field :album, :value => @params_post_album %>
-  <%= @params_post_album %><br>
+          <%= f.hidden_field :artwork, :value => @params_post_artwork %>
+          <%= f.hidden_field :album, :value => @params_post_album %>
+          <%= f.hidden_field :relese_date, :value => @params_post_release_date %>
+          <%= f.hidden_field :youtube_link, :value => @params_post_youtube_link %>
+        </div>
 
-  <%= f.label :artist %>
-  <%= f.hidden_field :artist, :value => @params_post_artist %>
-  <%= @params_post_artist %><br>
+        <div class="address-item">
+          <%= f.hidden_field :address, :value => @params_post_address %>
+          <string class="border-bottom border-secondary font-weight-bold address-title">Address</string><br>
+          <%= @params_post_address %><br>
 
-  <%= f.label :address %>
-  <%= f.hidden_field :address, :value => @params_post_address %>
-  <%= @params_post_address %><br>
+          <%= f.hidden_field :latitude, :value => @params_post_latitude %>
+          <%= f.hidden_field :longitude, :value => @params_post_longitude %>
+        </div>
 
-  <%= f.label :latitude %>
-  <%= f.hidden_field :latitude, :value => @params_post_latitude %>
-  <%= @params_post_latitude %><br>
+        <div class="post-item">
+          <string class="border-bottom border-secondary font-weight-bold post-title">
+            <%= f.label :body, "Proust" %>
+          </string><br>
+          <%= f.text_area :body, autofocus: true %><br>
 
-  <%= f.label :longitude %>
-  <%= f.hidden_field :longitude, :value => @params_post_longitude %>
-  <%= @params_post_longitude %><br>
+          <%= f.attachment_field :post_image %><br>
 
-  <%= f.label :body, "text" %>
-  <%= f.text_area :body %><br>
+          <%= f.submit "投稿", :class => "btn btn-primary post-btn" %><br>
+        </div>
 
-<%= f.submit "投稿", :class => "btn btn-primary" %><br>
-
-<% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -43,11 +43,11 @@
 /* The loader container */
 .loader {
   position: absolute;
-  bottom: 8vh;
-  left: 20vh;
+  bottom: 15vh;
+  left: 25vh;
 
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 
   margin-top: -100px;
   margin-left: -100px;
@@ -173,11 +173,11 @@
 
 .rec {
   position: absolute;
-  bottom: 8vh;
-  left: 20vh;
+  bottom: 15vh;
+  left: 25vh;
 
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 
   margin-top: -100px;
   margin-left: -100px;
@@ -268,9 +268,23 @@
     <div id="sample"></div>
   </div>
   <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
+    <div class="container mt-5">
+      <% @posts.each do |post| %>
+        <div class="post-content mb-4 row mx-auto p-3">
 
-    
-
+          <div class="col-lg-4">
+            <img src='<%= post.artwork %>' width="150px" height="150px" alt="artiwork">
+            <p class="map-info-time"><%= post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></p>
+          </div>
+          <div class="col-lg-6 col-lg-offset-2">
+            <%= link_to post.songs_title, proust_show_path(post.id), :class=> "md-1 h2 text-dark" %>
+            <p class="mb-2"><%= post.artist %></p>
+            <p class="mb-2 post-address"><%= post.address %></p>
+            <p><%= post.body %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
 <div class="loader" id="animation" style="display: none;">
@@ -311,51 +325,33 @@
     //     infoWindow.open(map, marker); // 吹き出しの表示
     //   });
 
-
     ///////実験///////実験///////実験///////実験///////実験///////実験///////実験///////
+      var formatDate = function (date, format) {
+  if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
+    format = format.replace(/YYYY/g, date.getFullYear());
+    format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+    format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+    format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
+    format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+    format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+  if (format.match(/S/g)) {
+    var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
+    var length = format.match(/S/g).length;
+    for (var i = 0; i < length; i++) format = format.replace(/S/, milliSeconds.substring(i, i + 1));
+  }
+  return format;
+};
     var map;
     var marker = [];
     var infoWindow = [];
     var postInfomation = {};
 
-    // var markerData = []
-    // // for文
-    // for (var i = 0; i < gon.posts.length; i++ ) {
-    //   var postInfomation
-
-    //   markerData.push();
-    // }
-
-    ////////
-
     var markerData = [ // マーカーを立てる場所名・緯度・経度
       {
            addr: 'TAM 東京',
            lat: 35.6954806,
-            lng: 139.76325010000005,
-            // icon: 'tam.png' // TAM 東京のマーカーだけイメージを変更する
-     }, {
-            addr: '小川町駅',
-         lat: 35.6951212,
-            lng: 139.76610649999998
-     }, {
-            addr: '淡路町駅',
-         lat: 35.69496,
-          lng: 139.76746000000003
-     }, {
-            addr: '御茶ノ水駅',
-            lat: 35.6993529,
-            lng: 139.76526949999993
-     }, {
-            addr: '神保町駅',
-         lat: 35.695932,
-         lng: 139.75762699999996
-     }
-     // , {
-     //        addr: gon.posts.address,
-     //       lat: parseFloat(gon.posts.latitude),
-     //     lng: parseFloat(gon.posts.longitude)
-     // }
+            lng: 139.76325010000005
+      }
     ];
 
     function initMap() {
@@ -366,53 +362,24 @@
           zoom: 12 // 地図のズームを指定
       });
 
-     // マーカー毎の処理
-     // for (var i = 0; i < markerData.length; i++) {
-     //        markerLatLng = new google.maps.LatLng({lat: markerData[i]['lat'], lng: markerData[i]['lng']}); // 緯度経度のデータ作成
-     //        console.log(markerLatLng);
-     //        marker[i] = new google.maps.Marker({ // マーカーの追加
-     //         position: markerLatLng, // マーカーを立てる位置を指定
-     //            map: map // マーカーを立てる地図を指定
-     //       });
-
-     //     infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-     //         content: '<div class="sample">' + markerData[i]['addr'] + '</div>' // 吹き出しに表示する内容
-     //       });
-
-     //     markerEvent(i); // マーカーにクリックイベントを追加
-     // }
 
      ///////////////
       for (var i = 0; i < gon.posts.length; i++) {
-        markerLatLng = new google.maps.LatLng({ lat: parseFloat(gon.posts[i]['latitude']), lng: parseFloat(gon.posts[i]['longitude']) }); // 緯度経度のデータ作成
+        markerLatLng = new google.maps.LatLng({ lat: gon.posts[i]['latitude'], lng: gon.posts[i]['longitude'] }); // 緯度経度のデータ作成
         marker[i] = new google.maps.Marker({ // マーカーの追加
           position: markerLatLng, // マーカーを立てる位置を指定
           map: map // マーカーを立てる地図を指定
         });
 
+
         infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-          content: '<div class="info-window">' + '<p>' + gon.posts[i]['created_at'] + '</p>' + `<a href='/prousts/${gon.posts[i]["id"]}/show'>` + gon.posts[i]['songs_title'] + '</a>' + '<p>' + gon.posts[i]['address'] + '</p>' + '<p>' + gon.posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
+          content: '<div class="info-window" style="width:400;">' + '<p class="mb-1 map-info-time">' + formatDate(new Date(gon.posts[i].created_at), 'YYYY年MM月DD日 hh:mm:ss') + '</p>' + '<p>' + gon.posts[i]['address'] + '</p>' + '<div class="mx-auto text-center">' +'<section class="d-inline-block">'+ `<a href='/prousts/${gon.posts[i]["id"]}/show' class='map-info-song-title d-block h2'>` + gon.posts[i]['songs_title'] + '</a>' + '<img src="' + gon.posts[i]['artwork'] + '" width="200" height="200" alt="artwork">' +'</section>'+ '</div>' + '<p class="rounded border border-secondary py-3 mt-2">' + gon.posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
         });
 
          markerEvent(i); // マーカーにクリックイベントを追加
       }
-
-
-     //////////////
-
-       // marker[0].setOptions({// TAM 東京のマーカーのオプション設定
-       //      icon: {
-       //       url: markerData[0]['icon']// マーカーの画像を変更
-       //     }
-       // });
     }
 
-    // マーカーにクリックイベントを追加 closeなしver
-    // function markerEvent(i) {
-    //     marker[i].addListener('click', function() { // マーカーをクリックしたとき
-    //       infoWindow[i].open(map, marker[i]); // 吹き出しの表示
-    //   });
-    // }
 
     // マーカーにクリックイベントを追加
     var currentInfoWindow = null;
@@ -432,7 +399,7 @@
 
 
 
-    /////////////////////////レコーディング///////////////////////////////
+/////////////////////////レコーディング///////////////////////////////
     let audio_sample_rate = null;
     let scriptProcessor = null;
     let audioContext = null;
@@ -576,20 +543,42 @@
         e.style.display = "block";
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////
+
     function getCurrentPosition(data) {
         if (data == null || data.result == null) {
           alert("曲がヒットしませんでした");
           return;
         }
+
+        ////////paramsの値を設定/////////////
         var songs_title = data.result.title;
         var album = data.result.album;
-        var artist = data.result.apple_music.artistName;
+
+        var release_date = data.result.release_date;
+        if (data.result["apple_music"]) {
+          var artist = data.result.apple_music.artistName;
+        } else if(data.result["spotify"]) {
+          var artist = data.result.spotify.artists.name;
+        }
+
+        if (data.result.spotify.album.images[0].url) {
+          var artwork = data.result.spotify.album.images[0].url;
+        }
+
+        var youtube_links = JSON.parse(data.result.lyrics.media);
+        for (var i=0; i< youtube_links.length; i++){
+          if (youtube_links[i].provider == "youtube") {
+            var youtube_link = youtube_links[i].url;
+          }
+        }
+        ///////////////////////////////////////
+
         'use strict';
-        console.log(4)
         if( navigator.geolocation ){
 
           navigator.geolocation.getCurrentPosition(success, error, option);
-          console.log(3)
           /*現在位置が取得できた時に実行*/
           function success(position){
             var data = position.coords;
@@ -599,12 +588,10 @@
             //Google Mapsで住所を取得
             var geocoder = new google.maps.Geocoder();
             var latlng = new google.maps.LatLng(lat, lng);
-            console.log(1)
             geocoder.geocode({'latLng': latlng}, function(results, status) {
               if (status == google.maps.GeocoderStatus.OK) {
-                console.log(2)
                 // document.getElementById('address').innerHTML = results[0].formatted_address;
-                window.location.href = `/prousts/new?address=${results[0].formatted_address}&latitude=${lat}&longitude=${lng}&songs_title=${songs_title}&album=${album}&artist=${artist}`;
+                window.location.href = `/prousts/new?address=${results[0].formatted_address}&latitude=${lat}&longitude=${lng}&songs_title=${songs_title}&album=${album}&artist=${artist}&release_date=${release_date}&artwork=${artwork}&youtube_link=${youtube_link}`;
                 }
               else {
                 alert("エラー" + status);
@@ -620,7 +607,7 @@
             3: "タイムアウトしました。",
             } ;
             //とりあえずalert
-            alert( errorMessage[error.code]);
+            alert(errorMessage[error.code]);
           }
           // オプション(省略可)
           var option = {
@@ -633,5 +620,8 @@
           alert("あなたの端末では、現在位置を取得できません。");
         }
     }
+
     /////////////////////////////////////////////////
+
+
 </script>
