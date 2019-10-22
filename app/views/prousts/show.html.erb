@@ -11,18 +11,21 @@
         <p class="mb-1"><%= @post.artist %></p>
         <% if @post.youtube_link %>
           <p class="mb-0" style="font-size: 13px;">To Youtube</p>
-          <p class="mb-4"><a href='<%= @post.youtube_link %>'><%= @post.youtube_link %></a></p>
+          <p class="mb-4"><a href='<%= @post.youtube_link %>' target="_blank"><%= @post.youtube_link %></a></p>
+        <% end %>
+        <% if @video_id %>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video_id %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <% end %>
         <p><%= @post.address %></p>
-        <% if @common_posts %>
+        <% if !@common_posts.empty? %>
           <p><%= link_to "Proust Friend!", "/prousts/#{@post.id}/common_posts_index" %></p>
         <% end %>
       </div>
     </div>
 
-    <div class="card mx-auto" style="width: 500px; height: auto;">
+    <div class="card mx-auto" style="width: 55vw; height: auto;">
       <% if @post.post_image_id %>
-      <%= image_tag attachment_url(@post, :post_image, :fill, 500, 312, format: "jpg"), :style => "height: auto" %>
+      <%= image_tag attachment_url(@post, :post_image, :fill, 650, 406, format: "jpg"), :style => "height: auto", :class => "card-img-top" %>
       <% end %>
       <div class="card-body">
         <p class="card-text"><%= @post.body %></p>

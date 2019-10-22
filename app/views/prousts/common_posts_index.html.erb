@@ -41,7 +41,6 @@
   .col-lg-10 {
     padding: 0 !important;
   }
-
 </style>
 
 
@@ -49,8 +48,8 @@
 
 <div class="container-fluid">
   <div class="row">
-    <%= render 'prousts/sidebar', common_posts: @common_posts %>
-    <div class="col-lg-10 tab-content" id="myTabContent">
+    <%= render 'prousts/sidebar', common_post: @common_post %>
+    <div class="col-lg-10 tab-content border-left border-muted" id="myTabContent">
       <ul class="nav nav-pills" id="myTab" role="tablist">
         <li class="nav-item nav-map bg-white">
           <a class="nav-link active" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">
@@ -67,13 +66,71 @@
         <div id="sample"></div>
       </div>
       <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
-        
+        <div class="container mt-5">
+          <div class="row ml-3">
+            <% @common_posts.each do |common_post| %>
+              <!-- <div class="post-content mb-4 row mx-auto p-3">
+                <div class="col-lg-4">
+                  <img src='<%= common_post.artwork %>' width="150px" height="150px" alt="artiwork">
+                  <p class="map-info-time"><%= common_post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></p>
+                </div>
+                <div class="col-lg-6 col-lg-offset-2">
+                  <%= link_to common_post.songs_title, proust_show_path(common_post.id), :class=> "md-1 h2 text-dark" %>
+                  <p class="mb-2"><%= common_post.artist %></p>
+                  <p class="mb-2 post-address"><%= common_post.address %></p>
+                  <p><%= common_post.body %></p>
+                </div> -->
+              <!-- </div> -->
+
+              <% if common_post.post_image_id %>
+                <div class="card d-inline-block m-2" style="width: 350px"; >
+                  <%= image_tag attachment_url(common_post, :post_image, :fill, 300, 187.5, format: "jpg"), :style => "height: auto", :class => "card-img-top" %>
+                  <div class="card-body p-1">
+                    <div style="text-align: right;"><span style="font-size: 12px; color: #aaa"><%= common_post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></span></div>
+                    <%= image_tag attachment_url(common_post.user, :profile_image, :fill, 60, 60, format: "jpg", fallback: "no_image.jpg"), :style => "border-radius: 100%; width: 60px; height: 60px; border: 1px solid #eee; display: inline-block;" %>
+                    <span class="card-text"><%= common_post.user.name %></span>
+                    <p class="card-text"><%= common_post.body %></p>
+                    <p style="font-size: 12px; color: #aaa; margin-bottom: 0;"><%= common_post.address %></p>
+                  </div>
+                </div>
+              <% end %>
+
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<div>
+  <% @common_posts.each do |common_post| %>
+    <% if common_post.post_image_id != nil %>
+      <%= image_tag attachment_url(common_post, :post_image, :fill, 400, 250, format: "jpg"), :id => common_post.id, :class => 'post_img', :style => "height: auto; display:none" %>
+    <% else %>
+      <img src="" class="post_img" style="display: none;">
+    <% end%>
+    <%= image_tag attachment_url(common_post.user, :profile_image, :fill, 100, 100, format: "jpg", fallback: "no_image.jpg"), :class => 'profile_img', :style => "display:none" %>
+    <h3 class="user_name" style="display: none;"><%= common_post.user.name %></h3>
+  <% end %>
+</div>
+
 <script>
+var formatDate = function (date, format) {
+  if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
+    format = format.replace(/YYYY/g, date.getFullYear());
+    format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+    format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+    format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
+    format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+    format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+  if (format.match(/S/g)) {
+    var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
+    var length = format.match(/S/g).length;
+    for (var i = 0; i < length; i++) format = format.replace(/S/, milliSeconds.substring(i, i + 1));
+  }
+  return format;
+};
 
 var map;
 var marker = [];
@@ -85,64 +142,104 @@ var markerData = [ // マーカーを立てる場所名・緯度・経度
        addr: 'TAM 東京',
        lat: 35.6954806,
         lng: 139.76325010000005,
-        // icon: 'tam.png' // TAM 東京のマーカーだけイメージを変更する
- }, {
-        addr: '小川町駅',
-     lat: 35.6951212,
-        lng: 139.76610649999998
- }, {
-        addr: '淡路町駅',
-     lat: 35.69496,
-      lng: 139.76746000000003
- }, {
-        addr: '御茶ノ水駅',
-        lat: 35.6993529,
-        lng: 139.76526949999993
- }, {
-        addr: '神保町駅',
-     lat: 35.695932,
-     lng: 139.75762699999996
- }
+  }
 ];
 
 
 function initMap() {
- // 地図の作成
-    var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']}); // 緯度経度のデータ作成
-   map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
+  // 地図の作成
+  var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']}); // 緯度経度のデータ作成
+  map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
      center: mapLatLng, // 地図の中心を指定
       zoom: 10 // 地図のズームを指定
-   });
+  });
 
- for (var i = 0; i < gon.common_posts.length; i++) {
+  // 要素をそれぞれの配列に渡す
+  let arr = [] ;
+  $('.post_img').each(function(i,element){
+      arr.push($(element).attr('src'));
+  });
+
+  let profile_arr = [] ;
+  $('.profile_img').each(function(i,element){
+      profile_arr.push($(element).attr('src'));
+  });
+
+  let name_arr = [] ;
+  $('.user_name').each(function(i,element){
+      name_arr.push($(element).text());
+  });
+  // for文よりmapの方が適切
+  // gon.common_posts.map(function(val,index) {
+  //  console.log(val);
+  //  console.log(gon.common_posts[index]);
+
+  // });
+  for (var i = 0; i < gon.common_posts.length; i++) {
         markerLatLng = new google.maps.LatLng({ lat: gon.common_posts[i]['latitude'], lng: gon.common_posts[i]['longitude'] }); // 緯度経度のデータ作成
         marker[i] = new google.maps.Marker({ // マーカーの追加
          position: markerLatLng, // マーカーを立てる位置を指定
             map: map // マーカーを立てる地図を指定
-       });
+        });
 
-     infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-         content: '<div class="info-window">' + '<p>' + gon.common_posts[i]['created_at'] + '</p>' + `<a href='/prousts/${gon.common_posts[i]["id"]}/common_posts_show'>` + gon.common_posts[i]['songs_title'] + '</a>' + '<p>' + gon.common_posts[i]['address'] + '</p>' + '<p>' + gon.common_posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
-       });
-
-     markerEvent(i); // マーカーにクリックイベントを追加
- }
-
-
-
-}
-
-// マーカーにクリックイベントを追加
-var currentInfoWindow = null;
-function markerEvent(i) {
-  marker[i].addListener('click', function() { // マーカーをクリックしたとき
-    if (currentInfoWindow) {
-      currentInfoWindow.close();
+    // infoWindowのコンテンツに値を設定するための記述(post_imgがnillでないかで条件分岐)
+    if (arr[i] != "") {
+      var content = '<div class="info-window container-fluid" style="position: relative; vertical-align: top;">'
+      content +=      '<div class="row">';
+      content +=        '<div class="img-box d-inline-block col-2 pl-1">';
+      content +=          '<img src="' + profile_arr[i] + '" style="height: 100px; width: 100px; border-radius: 100%;">';
+      content +=        '</div>';
+      content +=        '<div class="info-box d-inline-block col-10">';
+      content +=          '<h5 class="d-inline-block mb-0 mr-2">' + name_arr[i] + '</h5>';
+      content +=          '<p class="d-inline-block mb-0" style="color: #bbb; font-size: 12px;">';
+      content +=            formatDate(new Date(gon.common_posts[i].created_at), 'YYYY年MM月DD日 hh:mm:ss');
+      content +=          '</p>';
+      content +=          '<p class="mb-3" style="color: #bbb; font-size: 12px;">';
+      content +=            gon.common_posts[i]['address'];
+      content +=          '</p>';
+      content +=          '<p class="mb-0">' + gon.common_posts[i]['body'] + '</p>';
+      content +=          '<img src="' + arr[i] + '" style="border-radius: 5px;">';
+      content +=        '</div>';
+      content +=      '</div>';
+      content +=    '</div>';
+    } else {
+      var content = '<div class="info-window container-fluid" style="position: relative; vertical-align: top;">'
+      content +=      '<div class="row">';
+      content +=        '<div class="img-box d-inline-block col-2 pl-1">';
+      content +=          '<img src="' + profile_arr[i] + '" style="height: 100px; width: 100px; border-radius: 100%;">';
+      content +=        '</div>';
+      content +=        '<div class="info-box d-inline-block col-10">';
+      content +=          '<h5 class="d-inline-block mb-0 mr-2">' + name_arr[i] + '</h5>';
+      content +=          '<p class="d-inline-block mb-0" style="color: #bbb; font-size: 12px;">';
+      content +=            formatDate(new Date(gon.common_posts[i].created_at), 'YYYY年MM月DD日 hh:mm:ss');
+      content +=          '</p>';
+      content +=          '<p class="mb-3" style="color: #bbb; font-size: 12px;">';
+      content +=            gon.common_posts[i]['address'];
+      content +=          '</p>';
+      content +=          '<p class="mb-0">' + gon.common_posts[i]['body'] + '</p>';
+      content +=        '</div>';
+      content +=      '</div>';
+      content +=    '</div>';
     }
-    //情報ウィンドウを開く
-    infoWindow[i].open(map, marker[i]); // 吹き出しの表示
-    currentInfoWindow = infoWindow[i];
-  });
-}
+
+    infoWindow[i] = new google.maps.InfoWindow({content:content});
+
+    markerEvent(i); // マーカーにクリックイベントを追加
+  };
+
+  // マーカーがクリックされたとき
+  var currentInfoWindow = null;
+  function markerEvent(i) {
+    marker[i].addListener('click', function() {
+      if (currentInfoWindow) {
+        currentInfoWindow.close();
+      }
+      //情報ウィンドウを開く
+      infoWindow[i].open(map, marker[i]);
+      currentInfoWindow = infoWindow[i];
+    });
+  };
+};
+
 initMap();
 </script>

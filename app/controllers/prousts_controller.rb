@@ -9,6 +9,8 @@ require 'aws-sdk'
 
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
+  before_action :authenticate_user!, except: [:about]
+  before_action :ensure_correct_user, only: [:destroy]
 
   def about
   end
@@ -35,6 +37,9 @@ class ProustsController < ApplicationController
     redirect_to map_path
   end
 
+  def destroy
+  end
+
   def map
     @posts = Post.where(user_id: current_user.id).order(created_at: :desc)
     gon.posts = Post.where(user_id: current_user.id)
@@ -45,6 +50,8 @@ class ProustsController < ApplicationController
   def show
 
     @post = Post.find(params[:id])
+    v_param = @post.youtube_link.match(/v=.*$/).to_s
+    @video_id = v_param.slice!(2..-1)
     songs_title = Post.find(params[:id]).songs_title
     @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
     # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
@@ -110,7 +117,9 @@ class ProustsController < ApplicationController
   def common_posts_index
     songs_title = Post.find(params[:id]).songs_title
     gon.common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
-    @common_posts= Post.find(params[:id])
+    @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
+    @common_post= Post.find(params[:id])
+
   end
 
   def common_posts_show
@@ -145,7 +154,7 @@ class ProustsController < ApplicationController
 
     s3 = Aws::S3::Resource.new(region: region)
 
-    file = "/vagrant/proust/public/songs/#{mp3_file_name}"
+    file = "#{Rails.root.to_s}/public/songs/#{mp3_file_name}"
     bucket = 'proust-songs-database'
 
     # Get just the file name

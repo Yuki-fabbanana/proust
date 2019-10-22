@@ -1,19 +1,32 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <%= link_to "Proust", "/" %>
+  <div class="mr-2">
+    <%= link_to "/", :class => "h3" do %>
+      <em>
+        <span class="font-weight-bolder" style="font-size: 25px letter-spacing: -1px;"><%= current_user.name %></span>
+        <span class="font-weight-light" style="color: #dd0000; margin-left: -4px;">'s</span>
+      </em>
+      <span class="font-weight-bold">Proust</span>
+    <% end %>
+  </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#item" aria-controls="item" aria-expanded="false" aria-label="ナビゲーション切り替え">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="item">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <li class="nav-item mr-4" >
         <%= link_to "/" do %>
-          <i class="fas fa-home fa-2x"></i>Home
+          <i class="fas fa-home fa-2x" style="font-size: 25px"></i>Home
+        <% end %>
+      </li>
+      <li class="nav-item mr-4" >
+        <%= link_to edit_user_registration_path do %>
+          <i class="fas fa-user-edit" style="font-size: 25px"></i>Profile Edit
         <% end %>
       </li>
       <li class="nav-item">
         <%= link_to destroy_user_session_path, method: :delete do %>
-          <i class="fas fa-sign-out-alt fa-2x"></i>ログアウト
+          <i class="fas fa-sign-out-alt fa-2x" style="font-size: 25px"></i>ログアウト
         <% end %>
       </li>
     </ul>
