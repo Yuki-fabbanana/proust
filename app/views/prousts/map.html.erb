@@ -4,23 +4,6 @@
     height: 94vh;
   }
 
-  .info-window {
-
-  }
-
-  .nav-map {
-    position: absolute;
-    z-index: 1;
-    top: 250px;
-    left: 0;
-  }
-
-  .nav-time {
-    position: absolute;
-    z-index: 1;
-    top: 300px;
-    left: 0;
-  }
 
   .nav-pills .nav-link {
     border-radius: 0 !important;
@@ -251,12 +234,12 @@
 </style>
 
 <ul class="nav nav-pills" id="myTab" role="tablist">
-  <li class="nav-item nav-map bg-white">
+  <li class="nav-item nav-map bg-white" style="position: fixed; z-index: 1; top: 250px; left: 0;">
     <a class="nav-link active" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">
       <i class="fas fa-map-marker-alt"></i>
     </a>
   </li>
-  <li class="nav-item nav-time bg-white">
+  <li class="nav-item nav-time bg-white" style="position: fixed; z-index: 1; top: 300px; left: 0;">
     <a class="nav-link" id="time-tab" data-toggle="tab" href="#time" role="tab" aria-controls="time" aria-selected="true">
       <i class="far fa-clock"></i>
     </a>
@@ -269,22 +252,23 @@
   </div>
   <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
     <div class="container mt-5">
-      <% @posts.each do |post| %>
+      <% @scroll_posts.each do |scroll_post| %>
         <div class="post-content mb-4 row mx-auto p-3">
 
           <div class="col-lg-4">
-            <img src='<%= post.artwork %>' width="150px" height="150px" alt="artiwork">
-            <p class="map-info-time"><%= post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></p>
+            <img src='<%= scroll_post.artwork %>' width="150px" height="150px" alt="artiwork" style="border: 1px solid #ddd">
+            <p class="map-info-time"><%= scroll_post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></p>
           </div>
           <div class="col-lg-6 col-lg-offset-2">
-            <%= link_to post.songs_title, proust_show_path(post.id), :class=> "md-1 h2 text-dark" %>
-            <p class="mb-2"><%= post.artist %></p>
-            <p class="mb-2 post-address"><%= post.address %></p>
-            <p><%= post.body %></p>
+            <%= link_to scroll_post.songs_title, proust_show_path(scroll_post.id), :class=> "md-1 h2 text-dark" %>
+            <p class="mb-2"><%= scroll_post.artist %></p>
+            <p class="mb-2 post-address"><%= scroll_post.address %></p>
+            <p><%= scroll_post.body %></p>
           </div>
         </div>
       <% end %>
     </div>
+    <%= paginate @scroll_posts %>
   </div>
 </div>
 <div class="loader" id="animation" style="display: none;">
@@ -561,22 +545,22 @@
         ////////paramsの値を設定/////////////
         var songs_title = data.result.title;
         var album = data.result.album;
-
         var release_date = data.result.release_date;
-        if (data.result["apple_music"]) {
-          var artist = data.result.apple_music.artistName;
-        } else if(data.result["spotify"]) {
-          var artist = data.result.spotify.artists.name;
-        }
+        var artist = data.result.artist
 
-        if (data.result.spotify.album.images[0].url) {
+        var artwork = ""
+        var youtube_link = ""
+
+        if (data.result["spotify"]) {
           var artwork = data.result.spotify.album.images[0].url;
         }
 
-        var youtube_links = JSON.parse(data.result.lyrics.media);
-        for (var i=0; i< youtube_links.length; i++){
-          if (youtube_links[i].provider == "youtube") {
-            var youtube_link = youtube_links[i].url;
+        if (data.result.lyrics) {
+          var youtube_links = JSON.parse(data.result.lyrics.media);
+          for (var i=0; i< youtube_links.length; i++){
+            if (youtube_links[i].provider == "youtube") {
+              var youtube_link = youtube_links[i].url;
+            }
           }
         }
         ///////////////////////////////////////

@@ -26,24 +26,38 @@ class ProustsController < ApplicationController
     @params_post_album = address_params["album"]
     @params_post_songs_title = address_params["songs_title"]
     @params_post_release_date = address_params["release_date"]
-    @params_post_artwork = address_params["artwork"]
     @params_post_youtube_link = address_params["youtube_link"]
+
+    if address_params["artwork"].empty?
+      @params_post_artwork = "/assets/168410.jpg"
+    else
+      @params_post_artwork = address_params["artwork"]
+    end
   end
 
   def create
     post = Post.new(post_params)
     post.user_id = current_user.id
-    post.save!
-    redirect_to map_path
+
+    if post.save!
+      redirect_to map_path
+    else
+      render ("prousts/new")
+    end
   end
 
   def destroy
+    post = Post.find(params[:id])
+    post.destroy
+    redirect_to map_path
   end
 
   def map
     @posts = Post.where(user_id: current_user.id).order(created_at: :desc)
     gon.posts = Post.where(user_id: current_user.id)
     gon.post = Post.last
+
+    @scroll_posts = Post.where(user_id: current_user.id).order(created_at: :desc).page(params[:page]).per(5)
   end
 
 
@@ -183,7 +197,7 @@ class ProustsController < ApplicationController
 
 
     # audDからjsonを取得
-    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{object_path}")
+    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&spotify_country=ja&url=#{object_path}")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
