@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   post 'prousts/convert'
 
+  delete '/prousts/:id/delete', to: 'prousts#destroy', as: :proust_delete
+
 end
 
 

@@ -10,7 +10,6 @@ require 'aws-sdk'
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
   before_action :authenticate_user!, except: [:about]
-  before_action :ensure_correct_user, only: [:destroy]
 
   def about
   end
@@ -55,9 +54,9 @@ class ProustsController < ApplicationController
   def map
     @posts = Post.where(user_id: current_user.id).order(created_at: :desc)
     gon.posts = Post.where(user_id: current_user.id)
-    gon.post = Post.last
+    gon.post = Post.where(user_id: current_user.id).last
 
-    @scroll_posts = Post.where(user_id: current_user.id).order(created_at: :desc).page(params[:page]).per(5)
+    @scroll_posts = Post.where(user_id: current_user.id).order(created_at: :desc).page(params[:page]).per(10)
   end
 
 
@@ -132,8 +131,8 @@ class ProustsController < ApplicationController
     songs_title = Post.find(params[:id]).songs_title
     gon.common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
     @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
+    @scroll_common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title).page(params[:page]).per(9)
     @common_post= Post.find(params[:id])
-
   end
 
   def common_posts_show

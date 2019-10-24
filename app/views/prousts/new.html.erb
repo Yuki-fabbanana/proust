@@ -2,18 +2,21 @@
 
 <div class="container-fluid">
   <div class="row d-flex align-items-center new-post-wrapper">
-    <div class="col-xl-3">
+
+    <div class="col-xl-4 p-0">
       <div class="image-wrapper text-center">
-        <img src='<%= @params_post_artwork%>' width="300" height="300" alt="artiwork" class="d-inline-block"><br>
+        <img src='<%= @params_post_artwork%>' width="350" height="350" alt="artiwork" class="d-inline-block"><br>
       </div>
     </div>
-    <div class="col-xl-7 col-xl-offset-3">
+    <div class="col-xl-7 col-xl-offset-2">
       <%= form_with(model: @params_post_info, url: proust_path, local: true, :class => 'post-form mx-auto') do |f| %>
 
         <div class="song-item">
-          <string class="border-bottom border-secondary song-title font-weight-bold">Song</string>
+
+            <span class="song-title font-weight-bold" style="border-bottom: 1px solid #000"><em>Song</em></span>
+
           <%= f.hidden_field :songs_title, autofocus: true, :value => @params_post_songs_title %>
-          <p class="song-element"><%= @params_post_songs_title %></p>
+          <h5 class="song-element mt-1"><%= @params_post_songs_title %></h5>
 
           <%= f.hidden_field :artist, :value => @params_post_artist %>
           <p class="song-element text-left"><%= @params_post_artist %></p>
@@ -26,17 +29,19 @@
 
         <div class="address-item">
           <%= f.hidden_field :address, :value => @params_post_address %>
-          <string class="border-bottom border-secondary font-weight-bold address-title">Address</string><br>
-          <%= @params_post_address %><br>
+
+            <span class="font-weight-bold address-title" style="border-bottom: 1px solid #000"><em>Address</em></span>
+
+          <p><%= @params_post_address %></p>
 
           <%= f.hidden_field :latitude, :value => @params_post_latitude %>
           <%= f.hidden_field :longitude, :value => @params_post_longitude %>
         </div>
 
         <div class="post-item">
-          <string class="border-bottom border-secondary font-weight-bold post-title">
-            <%= f.label :body, "Proust" %>
-          </string><br>
+            <span class="font-weight-bold post-title" style="border-bottom: 1px solid #000">
+              <em><%= f.label :body, "Proust" %></em>
+            </span>
           <%= f.text_area :body, autofocus: true %><br>
 
           <%= f.attachment_field :post_image %><br>

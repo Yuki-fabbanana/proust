@@ -3,11 +3,20 @@
 <div class="container mt-5">
   <div style="padding: 30px; border-radius: 30px; background-color: #eee;">
     <div class="row mb-3 justify-content-center">
+<!-- modal -->
       <div class="col-lg-3">
         <img src="<%= @post.artwork %>" width="200" height="200" alt="artiwork" style="border-radius: 100%;">
       </div>
-      <div class="col-lg-7 col-lg-offset-2">
-        <p class="h2"><%= @post.songs_title %></p>
+      <div class="col-lg-7 col-lg-offset-2" style="vertical-align: middle;">
+        <div>
+          <h2 class="d-inline-block"><%= @post.songs_title %></h2>
+          <i id="ellipsis-menu" class="fas fa-ellipsis-v d-block" style="font-size: 28px; float: right; margin: 8px 30px 0 0; position: relative; width: 100px;">
+            <div class="modal-menu modal-hidden show-modal" style="position: absolute; top: -5px; left: -30px; z-index: 10;">
+              <%= link_to proust_delete_path(@post.id), method: :delete, "data-confirm" => "本当に投稿を削除しますか？", :class => "btn delete-button" do %><i class="far fa-trash-alt text-danger">  削除</i>
+              <% end %>
+            </div>
+          </i>
+        </div>
         <p class="mb-1"><%= @post.artist %></p>
         <% if @post.youtube_link %>
           <p class="mb-0" style="font-size: 13px;">To Youtube</p>
@@ -33,3 +42,44 @@
     </div>
   </div>
 </div>
+
+<div class=" overlay overlay-hidden overlay-size" style="z-index: 5; position: fixed">
+</div>
+
+<!-- モーダル -->
+
+<script>
+
+  $('#ellipsis-menu').click(function() {
+    $('.modal-menu').removeClass('modal-hidden');
+    $('.overlay').removeClass('overlay-hidden');
+  })
+
+  $('.overlay').click(function() {
+    $('.modal-menu').addClass('modal-hidden');
+    $('.overlay').addClass('overlay-hidden');
+  })
+
+</script>
+
+
+<style>
+.delete-button{
+  background-color: #eee;
+}
+
+.modal-hidden {
+  display: none;
+}
+
+.overlay-hidden {
+  display: none;
+}
+
+.overlay-size {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+</style>

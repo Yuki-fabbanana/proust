@@ -1,46 +1,47 @@
 <%= render "shared/header_user_before_signin" %>
 
 <div class="container mt-5">
-<h2>Sign up</h2>
+  <div style="width: auto; max-width: 550px; margin: 0 auto;">
+  <h2>Sign up</h2>
 
-<div>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
-    <div>hhh</div>
+  <div>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-    <div class="field">
-      <%= f.label :name %><br />
-      <%= f.text_field :name, autofocus: true %>
-    </div>
+      <div class="field mb-2">
+        <%= f.label :name %><br />
+        <%= f.text_field :name, autofocus: true,style: "width: 25vw; min-width: 200px;" %>
+      </div>
 
-    <div class="field">
-      <%= f.label :profile_image %><br />
-      <%= f.attachment_field :profile_image %>
-    </div>
+      <div class="field mb-2">
+        <%= f.label :profile_image %><br />
+        <%= f.attachment_field :profile_image %>
+      </div>
 
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autocomplete: "email" %>
-    </div>
+      <div class="field mb-2">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autocomplete: "email", style: "width: 25vw; min-width: 200px;" %>
+      </div>
 
-    <div class="field">
-      <%= f.label :password %>
-      <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em>
-      <% end %><br />
-      <%= f.password_field :password, autocomplete: "new-password" %>
-    </div>
+      <div class="field mb-2">
+        <%= f.label :password %>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "new-password", style: "width: 25vw; min-width: 200px;" %>
+      </div>
 
-    <div class="field">
-      <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-    </div>
+      <div class="field mb-3">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", style: "width: 25vw; min-width: 200px;" %>
+      </div>
 
-    <div class="actions">
-      <%= f.submit "Sign up" %>
-    </div>
-  <% end %>
+      <div class="actions">
+        <%= f.submit "Sign up" %>
+      </div>
+    <% end %>
 
 
-  <%= render "users/shared/links" %>
+    <%= render "users/shared/links" %>
+  </div>
 </div>

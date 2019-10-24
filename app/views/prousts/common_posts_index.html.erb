@@ -38,8 +38,8 @@
     padding-top: 7px;
   }
 
-  .col-lg-10 {
-    padding: 0 !important;
+  .common-post-index {
+    padding: 0;
   }
 </style>
 
@@ -49,7 +49,7 @@
 <div class="container-fluid">
   <div class="row">
     <%= render 'prousts/sidebar', common_post: @common_post %>
-    <div class="col-lg-10 tab-content border-left border-muted" id="myTabContent">
+    <div class="col-lg-10 tab-content border-left border-muted p-0" id="myTabContent">
       <ul class="nav nav-pills" id="myTab" role="tablist">
         <li class="nav-item nav-map bg-white">
           <a class="nav-link active" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">
@@ -65,23 +65,10 @@
       <div class="tab-pane fade show active" id="map" role="tabpanel" aria-labelledby="map-tab">
         <div id="sample"></div>
       </div>
-      <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
-        <div class="container mt-5">
+      <div class="tab-pane fade pt-5" id="time" role="tabpanel" aria-labelledby="time-tab">
+        <div class="container common-posts-index jscroll p-0">
           <div class="row ml-3">
-            <% @common_posts.each do |common_post| %>
-              <!-- <div class="post-content mb-4 row mx-auto p-3">
-                <div class="col-lg-4">
-                  <img src='<%= common_post.artwork %>' width="150px" height="150px" alt="artiwork">
-                  <p class="map-info-time"><%= common_post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></p>
-                </div>
-                <div class="col-lg-6 col-lg-offset-2">
-                  <%= link_to common_post.songs_title, proust_show_path(common_post.id), :class=> "md-1 h2 text-dark" %>
-                  <p class="mb-2"><%= common_post.artist %></p>
-                  <p class="mb-2 post-address"><%= common_post.address %></p>
-                  <p><%= common_post.body %></p>
-                </div> -->
-              <!-- </div> -->
-
+            <% @scroll_common_posts.each do |common_post| %>
               <% if common_post.post_image_id %>
                 <div class="card d-inline-block m-2" style="width: 350px"; >
                   <%= image_tag attachment_url(common_post, :post_image, :fill, 300, 187.5, format: "jpg"), :style => "height: auto", :class => "card-img-top" %>
@@ -93,10 +80,22 @@
                     <p style="font-size: 12px; color: #aaa; margin-bottom: 0;"><%= common_post.address %></p>
                   </div>
                 </div>
+              <% else %>
+                <div class="card d-inline-block m-2" style="width: 350px;">
+                  <div class="card-body py-4">
+                    <div style="text-align: right; margin-bottom:50px;"><span style="font-size: 12px; color: #aaa"><%= common_post.created_at.strftime('%Y年%m月%d日 %H時%M分') %></span></div>
+                    <div class="mb-3">
+                      <%= image_tag attachment_url(common_post.user, :profile_image, :fill, 60, 60, format: "jpg", fallback: "no_image.jpg"), :style => "border-radius: 100%; width: 60px; height: 60px; border: 1px solid #eee;" %>
+                      <span class="card-text"><%= common_post.user.name %></span>
+                    </div>
+                    <p class="card-text mb-5"><%= common_post.body %></p>
+                    <p style="font-size: 12px; color: #aaa; margin-bottom: 0;"><%= common_post.address %></p>
+                  </div>
+                </div>
               <% end %>
-
             <% end %>
           </div>
+          <%= paginate @scroll_common_posts%>
         </div>
       </div>
     </div>
@@ -139,7 +138,6 @@ var infoWindow = [];
 
 var markerData = [ // マーカーを立てる場所名・緯度・経度
   {
-       addr: 'TAM 東京',
        lat: 35.6954806,
         lng: 139.76325010000005,
   }
@@ -151,7 +149,7 @@ function initMap() {
   var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']}); // 緯度経度のデータ作成
   map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
      center: mapLatLng, // 地図の中心を指定
-      zoom: 10 // 地図のズームを指定
+      zoom: 5 // 地図のズームを指定
   });
 
   // 要素をそれぞれの配列に渡す
@@ -242,4 +240,11 @@ function initMap() {
 };
 
 initMap();
+
+$(function() {
+  $('.jscroll').jscroll({
+    contentSelector: '.common-posts-index',
+    nextSelector: 'span.next:last a'
+  });
+});
 </script>

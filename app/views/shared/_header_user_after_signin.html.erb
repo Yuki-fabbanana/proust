@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="mr-2">
-    <%= link_to "/", :class => "h3" do %>
+    <%= link_to "/", :class => "h3", :style => "text-decoration: none;" do %>
       <em>
         <span class="font-weight-bolder" style="font-size: 25px letter-spacing: -1px;"><%= current_user.name %></span>
-        <span class="font-weight-light" style="color: #dd0000; margin-left: -4px;">'s</span>
+        <span class="font-weight-light" style="margin-left: -4px;">'s</span>
       </em>
       <span class="font-weight-bold">Proust</span>
     <% end %>
@@ -15,17 +15,17 @@
   <div class="collapse navbar-collapse" id="item">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item mr-4" >
-        <%= link_to "/" do %>
+        <%= link_to "/", :style => "text-decoration: none;" do %>
           <i class="fas fa-home fa-2x" style="font-size: 25px"></i>Home
         <% end %>
       </li>
       <li class="nav-item mr-4" >
-        <%= link_to edit_user_registration_path do %>
+        <%= link_to edit_user_registration_path, :style => "text-decoration: none;" do %>
           <i class="fas fa-user-edit" style="font-size: 25px"></i>Profile Edit
         <% end %>
       </li>
       <li class="nav-item">
-        <%= link_to destroy_user_session_path, method: :delete do %>
+        <%= link_to destroy_user_session_path, method: :delete, :style => "text-decoration: none;" do %>
           <i class="fas fa-sign-out-alt fa-2x" style="font-size: 25px"></i>ログアウト
         <% end %>
       </li>
