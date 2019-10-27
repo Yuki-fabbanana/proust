@@ -71,6 +71,7 @@
 </div>
 
 <script>
+// 時間フォーマット
 var formatDate = function (date, format) {
   if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
     format = format.replace(/YYYY/g, date.getFullYear());
@@ -86,34 +87,50 @@ var formatDate = function (date, format) {
   }
   return format;
 };
+
+// マップ表示
 var map;
 var marker = [];
 var infoWindow = [];
 var postInfomation = {};
 
-function initMap() {
- // 地図の作成
-  var mapLatLng = new google.maps.LatLng({lat: gon.post['latitude'], lng: gon.post['longitude']}); // 緯度経度のデータ作成
-  map = new google.maps.Map(document.getElementById('sample'), { // #sampleに地図を埋め込む
-     center: mapLatLng, // 地図の中心を指定
-      zoom: 12 // 地図のズームを指定
-  });
+var markerData = [
+  {
+       lat: 35.6954806,
+        lng: 139.76325010000005,
+  }
+];
 
-
- ///////////////
-  for (var i = 0; i < gon.posts.length; i++) {
-    markerLatLng = new google.maps.LatLng({ lat: gon.posts[i]['latitude'], lng: gon.posts[i]['longitude'] }); // 緯度経度のデータ作成
-    marker[i] = new google.maps.Marker({ // マーカーの追加
-      position: markerLatLng, // マーカーを立てる位置を指定
-      map: map // マーカーを立てる地図を指定
+if (gon.post === null) {
+  function initMap() {
+    var mapLatLng = new google.maps.LatLng({lat: markerData[0]['lat'], lng: markerData[0]['lng']});
+    map = new google.maps.Map(document.getElementById('sample'), {
+       center: mapLatLng,
+        zoom: 5
+    });
+  }
+} else {
+  function initMap() {
+    var mapLatLng = new google.maps.LatLng({lat: gon.post['latitude'], lng: gon.post['longitude']});
+    map = new google.maps.Map(document.getElementById('sample'), {
+       center: mapLatLng,
+        zoom: 12
     });
 
+    for (var i = 0; i < gon.posts.length; i++) {
+      markerLatLng = new google.maps.LatLng({ lat: gon.posts[i]['latitude'], lng: gon.posts[i]['longitude'] }); // 緯度経度のデータ作成
+      marker[i] = new google.maps.Marker({ // マーカーの追加
+        position: markerLatLng, // マーカーを立てる位置を指定
+        map: map // マーカーを立てる地図を指定
+      });
 
-    infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
-      content: '<div class="info-window" style="width:400;">' + '<p class="mb-1 map-info-time">' + formatDate(new Date(gon.posts[i].created_at), 'YYYY年MM月DD日 hh:mm:ss') + '</p>' + '<p>' + gon.posts[i]['address'] + '</p>' + '<div class="mx-auto text-center">' +'<section class="d-inline-block">'+ `<a href='/prousts/${gon.posts[i]["id"]}/show' class='map-info-song-title d-block h2'>` + gon.posts[i]['songs_title'] + '</a>' + '<img src="' + gon.posts[i]['artwork'] + '" width="200" height="200" alt="artwork">' +'</section>'+ '</div>' + '<p class="py-3 mt-2" style="border: 3px solid #c0c0c0; ">' + gon.posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
-    });
 
-     markerEvent(i); // マーカーにクリックイベントを追加
+      infoWindow[i] = new google.maps.InfoWindow({ // 吹き出しの追加
+        content: '<div class="info-window" style="width:400;">' + '<p class="mb-1 map-info-time">' + formatDate(new Date(gon.posts[i].created_at), 'YYYY年MM月DD日 hh:mm:ss') + '</p>' + '<p>' + gon.posts[i]['address'] + '</p>' + '<div class="mx-auto text-center">' +'<section class="d-inline-block">'+ `<a href='/prousts/${gon.posts[i]["id"]}/show' class='map-info-song-title d-block h2'>` + gon.posts[i]['songs_title'] + '</a>' + '<img src="' + gon.posts[i]['artwork'] + '" width="200" height="200" alt="artwork">' +'</section>'+ '</div>' + '<p class="py-3 mt-2" style="border: 3px solid #c0c0c0; ">' + gon.posts[i]['body'] + '</p>' +'</div>' // 吹き出しに表示する内容
+      });
+
+       markerEvent(i); // マーカーにクリックイベントを追加
+    }
   }
 }
 
@@ -185,7 +202,7 @@ let saveAudio = function () {
   })
   // Ajaxリクエストが成功・失敗どちらでも発動
   .always( (data) => {
-
+    audioData = [];
   });
 
 }
@@ -258,6 +275,7 @@ var onAudioProcess = function (e) {
   }
 
   audioData.push(bufferData);
+  console.log(audioData.length);
 };
 
 // getusermedia
@@ -365,12 +383,11 @@ function getCurrentPosition(data) {
 
 ///////////////////////////////////////////////
 $(function() {
-$('.jscroll').jscroll({
-  contentSelector: '.post-index',
-  nextSelector: 'span.next:last a'
-});
+  $('.jscroll').jscroll({
+    contentSelector: '.post-index',
+    nextSelector: 'span.next:last a'
+  });
 });
 
-$('.jscroll').jscroll(jscrollOption);
 
 </script>

@@ -1,5 +1,14 @@
 <%= render "shared/header_user_after_signin" %>
 
+<% if @params_post_info.errors.any? %>
+<h3><%= @params_post_info.errors.count %>errors prohibited this obj from being saved:</h3>
+<ul>
+  <% @params_post_info.errors.full_messages.each do |message| %>
+  <li><%= message %></li>
+  <% end %>
+</ul>
+<% end %>
+
 <div class="container-fluid">
   <div class="row d-flex align-items-center new-post-wrapper">
 

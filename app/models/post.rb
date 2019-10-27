@@ -8,5 +8,5 @@ class Post < ApplicationRecord
 
   validates :latitude, presence: true
   validates :longitude, presence: true
-  validates :body, presence: true, length: {in: 1..140}
+  validates :body, presence: true, length: { maximum: 140 }
 end

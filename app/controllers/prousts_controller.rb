@@ -35,10 +35,24 @@ class ProustsController < ApplicationController
   end
 
   def create
-    post = Post.new(post_params)
-    post.user_id = current_user.id
+    @params_post_info = Post.new(post_params)
+    @params_post_info.user_id = current_user.id
+    @params_post_address = post_params["address"]
+    @params_post_latitude = post_params["latitude"]
+    @params_post_longitude = post_params["longitude"]
+    @params_post_artist = post_params["artist"]
+    @params_post_album = post_params["album"]
+    @params_post_songs_title = post_params["songs_title"]
+    @params_post_release_date = post_params["release_date"]
+    @params_post_youtube_link = post_params["youtube_link"]
 
-    if post.save!
+    if post_params["artwork"].empty?
+      @params_post_artwork = "/assets/168410.jpg"
+    else
+      @params_post_artwork = post_params["artwork"]
+    end
+
+    if @params_post_info.save
       redirect_to map_path
     else
       render ("prousts/new")
@@ -61,70 +75,11 @@ class ProustsController < ApplicationController
 
 
   def show
-
     @post = Post.find(params[:id])
     v_param = @post.youtube_link.match(/v=.*$/).to_s
     @video_id = v_param.slice!(2..-1)
     songs_title = Post.find(params[:id]).songs_title
     @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
-    # params = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
-    # p params
-    # 以下一文消しても大丈夫かも
-    # parse_url = URI.parse("https://audd.p.rapidapi.com/")
-
-    # url.query = URI.encode_www_form({songs_url: 'https://audd.tech/example1.mp3'})
-    # url = URI.parse("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&url=#{params}")
-
-
-    # getの場合
-    # params = URI.encode_www_form({url: 'https://audd.tech/example1.mp3'})
-    # p "-----------------"
-    # p parse_url
-    # url = URI("#{parse_url}?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us&#{params}")
-    # p url
-
-#     binary_file = File.open("binary_file_path.bin", "rb")
-# image_file = File.open("image_file_path.png", "rb")
-# begin
-#   data = [
-#     # 通常のパラメータ
-#     # <input type="text" name="name1" value="value1"> のような値
-#     [ "name1", "value1" ],
-
-#     # ファイルを指定する場合
-#     # <input type="file" name="binary_file"> のような場合に相当する
-#     [ "binary_file", binary_file, { filename: "binary_file_path.bin" } ],
-
-#     # content_type も指定できる。
-#     [ "image_file", image_file, { filename: "image_file_path.png", content_type: "image/png" } ]
-#   ]
-
-
-    url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&itunes_country=us")
-
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    # binary_file = File.open("tmp/songs/yestaday.mp3", "w+")
-    # p binary_file.read
-    # binary_file.close
-    # p binary_file
-    # p "-----------------"
-    # postの場合
-    # request = Net::HTTP::Post.new(url)
-    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
-    # request["x-rapidapi-key"] = ''
-    # request["content-type"] = 'multipart/form-data; boundary=---011000010111000001101001'
-    # request.set_form(binary_file, "multipart/form-data")
-
-    # getの場合
-    # request = Net::HTTP::Get.new(url)
-    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
-    # request["x-rapidapi-key"] = ''
-
-    # response = http.request(request)
-    # puts response.read_body
   end
 
   def common_posts_index
@@ -213,13 +168,6 @@ class ProustsController < ApplicationController
 
     # 詳細見る必要あり
     @result = JSON.parse(response.read_body)
-    # puts @result
-    #     # 表示用の変数に結果を格納
-        # @artist = @result[:result]["artist"]
-    #     @address1 = @result["result"]["title"]
-    #     @address2 = @result["result"]["album"]
-    # byebug
-
 
     render :json => @result
 
@@ -227,37 +175,27 @@ class ProustsController < ApplicationController
 
   end
 
+  private
 
-# private
-# def get_analtyices_song(mp3_file_name)
-#   # 以下一文あっているかわからず
-#   if current_env == production
-#     return_param = "timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics"
-#     itunes_country_param = "us"
-#     url_param = "https%3A%2F%2Faudd.tech%2Fsongs%2F" + mp3_file_name
+  def address_params
+    params.permit(
+        :address,
+        :latitude,
+        :longitude,
+        :artist,
+        :songs_title,
+        :album,
+        :release_date,
+        :artwork,
+        :youtube_link,
+        :body,
+        :post_image
+      )
+  end
 
-
-#     url = URI("https://audd.p.rapidapi.com/?return=" + return_param + "&itunes_country=" + itunes_country_param + "&url=" + url_param)
-
-    # http = Net::HTTP.new(url.host, url.port)
-    # http.use_ssl = true
-    # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    # request = Net::HTTP::Get.new(url)
-    # request["x-rapidapi-host"] = 'audd.p.rapidapi.com'
-    # request["x-rapidapi-key"] = '#{TODO}'
-
-
-#     response = http.request(request)
-#     puts response.read_body
-#   else
-
-#   end
-# end
-
-private
-
-def address_params
-  params.permit(
+  def post_params
+    params.require(:post).permit(
+      :user_id,
       :address,
       :latitude,
       :longitude,
@@ -266,28 +204,10 @@ def address_params
       :album,
       :release_date,
       :artwork,
-      :youtube_link
+      :youtube_link,
+      :body,
+      :post_image
     )
-end
-
-def post_params
-  params.require(:post).permit(
-    :user_id,
-    :address,
-    :latitude,
-    :longitude,
-    :artist,
-    :songs_title,
-    :album,
-    :release_date,
-    :artwork,
-    :youtube_link,
-    :body,
-    :post_image
-  )
-end
-
-
-
+  end
 
 end
