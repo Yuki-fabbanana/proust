@@ -88,7 +88,7 @@ var formatDate = function (date, format) {
   return format;
 };
 
-// マップ表示
+///////////////////////////マップ表示/////////////////////////////////
 var map;
 var marker = [];
 var infoWindow = [];
@@ -194,7 +194,7 @@ let saveAudio = function () {
 
     console.log(data);
     getCurrentPosition(data);
-    alert("データの取得に成功しました。");
+    // alert("データの取得に成功しました。");
   })
   // Ajaxリクエストが失敗した時発動
   .fail( (data) => {
@@ -275,7 +275,6 @@ var onAudioProcess = function (e) {
   }
 
   audioData.push(bufferData);
-  console.log(audioData.length);
 };
 
 // getusermedia
@@ -304,7 +303,7 @@ function startRec(){
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////現在地取得////////////////////////////////////
 
 function getCurrentPosition(data) {
   if (data == null || data.result == null) {
@@ -312,7 +311,7 @@ function getCurrentPosition(data) {
     return;
   }
 
-  ////////paramsの値を設定/////////////
+  ////////paramsの値を設定//////////
   var songs_title = data.result.title;
   var album = data.result.album;
   var release_date = data.result.release_date;
@@ -333,7 +332,7 @@ function getCurrentPosition(data) {
       }
     }
   }
-  ///////////////////////////////////////
+///////////////////////////////////
 
   'use strict';
   if( navigator.geolocation ){
@@ -381,7 +380,7 @@ function getCurrentPosition(data) {
   }
 }
 
-///////////////////////////////////////////////
+////////////////無限スクロール実装//////////////////////////////
 $(function() {
   $('.jscroll').jscroll({
     contentSelector: '.post-index',

@@ -10,6 +10,7 @@ require 'aws-sdk'
 class ProustsController < ApplicationController
   skip_before_action:verify_authenticity_token
   before_action :authenticate_user!, except: [:about]
+  before_action :ensure_correct_user, {only: [:show, :destroy]}
 
   def about
   end
@@ -98,21 +99,20 @@ class ProustsController < ApplicationController
   end
 
   def convert
-    file_test = params[:file]
+    params_file = params[:file]
     file_name = Digest::MD5.hexdigest(Time.now.to_s)
     wav_file_name = file_name + ".wav"
     mp3_file_name = file_name + ".mp3"
-    wav_file_path = Rails.root.to_s + "/public/songs/" + wav_file_name
-    mp3_file_path = Rails.root.to_s + "/public/songs/" + mp3_file_name
+    wav_file_path = Rails.root.to_s + "/tmp/songs/" + wav_file_name
+    mp3_file_path = Rails.root.to_s + "/tmp/songs/" + mp3_file_name
 
 
     # 以下文tmpfileにした方がいい
     File.open(wav_file_path, 'wb') do |f|
-       f.write(file_test.tempfile.read.force_encoding("UTF-8"))
+       f.write(params_file.tempfile.read.force_encoding("UTF-8"))
     end
 
     system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
-
 
     # AWS upload
     region = "ap-northeast-1"
@@ -122,7 +122,7 @@ class ProustsController < ApplicationController
 
     s3 = Aws::S3::Resource.new(region: region)
 
-    file = "#{Rails.root.to_s}/public/songs/#{mp3_file_name}"
+    file = "#{Rails.root.to_s}/tmp/songs/#{mp3_file_name}"
     bucket = 'proust-songs-database'
 
     # Get just the file name
@@ -134,6 +134,10 @@ class ProustsController < ApplicationController
 
     # Upload it
     obj.upload_file(file)
+
+    #Delete WAV MP3 File
+    FileUtils.rm(wav_file_path)
+    FileUtils.rm(mp3_file_path)
 
     # Create a S3 client
     client = Aws::S3::Client.new(region: region)
@@ -170,12 +174,16 @@ class ProustsController < ApplicationController
     @result = JSON.parse(response.read_body)
 
     render :json => @result
-
-    # json = get_analtyices_song(mp3_file_name)
-
   end
 
   private
+
+  def ensure_correct_user
+    post = Post.find(params[:id])
+    if post.user_id != current_user.id
+      redirect_to map_path
+    end
+  end
 
   def address_params
     params.permit(
