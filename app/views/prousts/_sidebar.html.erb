@@ -1,6 +1,6 @@
 <div class="col-lg-2 mt-5 px-auto">
   <div class="d-inline-block">
-    <p class="h2"><%= common_post.songs_title %></p>
+    <p class="h2"><%= link_to common_post.songs_title, proust_show_path, :style => "color: #000;" %>
     <p><%= common_post.artist %></p>
     <img src="<%= common_post.artwork %>" width="210" height="210" alt="artiwork">
   </div>

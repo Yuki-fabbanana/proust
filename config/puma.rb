@@ -46,7 +46,7 @@ if Rails.env == 'production'
     File.join(rails_root, 'log', 'puma.log'),
     File.join(rails_root, 'log', 'puma-error.log'),
     true
-    )
+  )
 
   # デーモン
   daemonize

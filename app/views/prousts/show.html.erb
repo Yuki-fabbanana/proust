@@ -18,7 +18,7 @@
           </i>
         </div>
         <p class="mb-1"><%= @post.artist %></p>
-        <% if @post.youtube_link %>
+        <% if !@post.youtube_link.empty? %>
           <p class="mb-0" style="font-size: 13px;">To Youtube</p>
           <p class="mb-4"><a href='<%= @post.youtube_link %>' target="_blank"><%= @post.youtube_link %></a></p>
         <% end %>

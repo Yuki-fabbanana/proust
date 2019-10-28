@@ -29,7 +29,7 @@ class ProustsController < ApplicationController
     @params_post_youtube_link = address_params["youtube_link"]
 
     if address_params["artwork"].empty?
-      @params_post_artwork = "/assets/168410.jpg"
+      @params_post_artwork = "/images/168410.jpg"
     else
       @params_post_artwork = address_params["artwork"]
     end
@@ -48,7 +48,7 @@ class ProustsController < ApplicationController
     @params_post_youtube_link = post_params["youtube_link"]
 
     if post_params["artwork"].empty?
-      @params_post_artwork = "/assets/168410.jpg"
+      @params_post_artwork = "/images/168410.jpg"
     else
       @params_post_artwork = post_params["artwork"]
     end
