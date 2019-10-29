@@ -8,8 +8,6 @@ Rails.application.routes.draw do
 
   get 'prousts/about', as: :about
 
-  get 'address/show'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get 'prousts/new'
   get 'prousts/rec', as: :proust_rec
   get 'prousts/:id/show', to: 'prousts#show', as: :proust_show

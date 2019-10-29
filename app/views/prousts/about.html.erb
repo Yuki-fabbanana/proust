@@ -1,3 +1,36 @@
 <%= render "shared/header_user_before_signin" %>
 
-<h1>about!!!</h1>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container" style="text-align: center">
+    <h1 class="display-2 mb-4">Welcome to Proust!</h1>
+    <p class="lead"><span class="h4 font-weight-normal">Proust</span>は音楽を聴いた時に感じた感動を、思い出として保存していけるWebサイトです。</p>
+  </div>
+</div>
+<div class="container">
+  <h3 class="display-4 mb-5">How to use Proust</h3>
+  <h4 class="mb-3" style="font-size: 28px;">・Save Memories</h4>
+  <div class="row mb-5">
+    <div class="col-lg-3" style="text-align: center;">
+      <%= image_tag '/images/proust_btn.png', :size =>'150x150' %>
+      <div>
+      <span class="text-primary"><em>Click This Button!</em></span>
+      </div>
+    </div>
+    <div class="col-lg-9 pt-3">
+      <p>街を歩いている時やカフェで休んでいる時のようなふとした瞬間。<br>聴こえてきた曲に感動したら<span class="text-primary"><em>このボタン</em></span>を押してください。</p>
+      <p>ボタンを押すと、マイクと、位置情報サービスの、使用許可を確認されます。<br>許可をすると、音声の録音と位置情報の取得が行われ、データの取得が成功すると投稿画面が表示されます。
+      <p>その時に感じたことや、観ていた風景などの写真を入力して、思い出を保存していきましょう！</p>
+    </div>
+  </div>
+  <h4 class="mb-3" style="font-size: 28px;">・Proust Friends!</h4>
+  <div class="row mb-5">
+    <p class="ml-5">
+      自分が投稿した曲と同じ曲の投稿をしているユーザーがいた場合、投稿詳細画面に<span class="text-primary">Proust Friends!</span>というリンクが表示されます。<br>
+      リンク先では、詳細で見ていた曲についての他のユーザーの投稿を見ることができます。
+    </p>
+    <p class="ml-5">
+      同じ曲の思い出を持っている仲間が、どこでどんなことを感じたのかを見て、楽しみましょう！
+    </p>
+    <%= image_tag '/images/proust_friends.png', style: "width: 100%; height: auto;" %>
+  </div>
+</div>

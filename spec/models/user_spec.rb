@@ -5,19 +5,19 @@ RSpec.describe User, type: :model do
     context "validates unique" do
       # 重複したメールアドレスなら無効な状態であること
       it "is invalid with a duplicate email address" do
-        user = User.create(
-          name: "test1",
+        User.create(
+          name: "Joe",
           email: "test@test.com",
           password: "password",
         )
 
-        user2 = User.new(
-          name: "test2",
+        user = User.new(
+          name: "Jane",
           email: "test@test.com",
           password: "password",
         )
-        user2.invalid?
-        expect(user2).to be_invalid
+        user.valid?
+        expect(user.errors[:email]).to include("has already been taken")
       end
     end
 
@@ -29,10 +29,13 @@ RSpec.describe User, type: :model do
           email: "test@test.com",
           password: "password",
         )
-        user.invalid?
-        expect(user).to be_invalid
-      end
+        user.valid?
 
+        expect(user.errors[:name]).to include("can't be blank")
+      end
+    end
+
+    context "validates length" do
       # 名前が20字以上だと無効な状態であること
       it "is invalid too long name" do
         user = User.new(
@@ -40,8 +43,9 @@ RSpec.describe User, type: :model do
           email: "test@test.com",
           password: "password",
         )
-        user.invalid?
-        expect(user).to be_invalid
+        user.valid?
+
+        expect(user.errors[:name]).to include("is too long (maximum is 20 characters)")
       end
 
       # パスワードが6文字未満だと無効な状態であること
@@ -50,8 +54,8 @@ RSpec.describe User, type: :model do
           name: "test",
           email: "email@email.com",
           password: "aaaaa",)
-        user.invalid?
-        expect(user).to be_invalid
+        user.valid?
+        expect(user.errors[:password]).to include("is too short (minimum is 6 characters)")
       end
     end
   end

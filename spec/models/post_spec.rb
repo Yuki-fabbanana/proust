@@ -23,7 +23,6 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
 
         expect(post).to be_valid
       end
@@ -41,9 +40,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:songs_title]).to include("can't be blank")
       end
 
       # アーティスト名が空だと無効な状態であること
@@ -57,9 +56,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:artist]).to include("can't be blank")
       end
 
       # アートワークが空だと無効な状態であること
@@ -73,9 +72,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:artwork]).to include("can't be blank")
       end
 
       # 住所が空だと無効な状態であること
@@ -89,9 +88,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:address]).to include("can't be blank")
       end
 
       # 緯度が空だと無効な状態であること
@@ -105,9 +104,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "testtesttest",
         )
-        post.invalid?
+       post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:latitude]).to include("can't be blank")
       end
 
       # 経度が空だと無効な状態であること
@@ -121,9 +120,9 @@ RSpec.describe Post, type: :model do
           longitude: nil,
           body: "testtesttest",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:longitude]).to include("can't be blank")
       end
 
       # 本文が空だと無効な状態であること
@@ -137,9 +136,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:body]).to include("can't be blank")
       end
     end
 
@@ -155,9 +154,9 @@ RSpec.describe Post, type: :model do
           longitude: 139.69939779999999,
           body: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         )
-        post.invalid?
+        post.valid?
 
-        expect(post).to be_invalid
+        expect(post.errors[:body]).to include("is too long (maximum is 140 characters)")
       end
     end
   end

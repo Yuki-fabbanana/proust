@@ -56,6 +56,15 @@ nav.pagination {
   width: 60vw;
 }
 
+.about-dot {
+  width: 100px;
+  height: 100px;
+
+  perspective: 200px;
+  /*transform-type: preserve-3d;*/
+  z-index: 5;
+}
+
 
 /* The loader container */
 .loader {
