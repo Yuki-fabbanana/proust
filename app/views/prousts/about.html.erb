@@ -1,4 +1,8 @@
-<%= render "shared/header_user_before_signin" %>
+<% if user_signed_in? %>
+  <%= render "shared/header_user_after_signin" %>
+<% else %>
+  <%= render "shared/header_user_before_signin" %>
+<% end %>
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container" style="text-align: center">

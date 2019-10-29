@@ -70,13 +70,11 @@ nav.pagination {
 .loader {
   position: fixed;
   bottom: 13vh;
-  left: 27vh;
+  left: 8vw;
+  /*left: 27vh;*/
 
   width: 100px;
   height: 100px;
-
-  margin-top: -100px;
-  margin-left: -100px;
 
   perspective: 200px;
   /*transform-type: preserve-3d;*/
@@ -199,13 +197,11 @@ nav.pagination {
 .rec {
   position: fixed;
   bottom: 13vh;
-  left: 27vh;
+  left: 8vw;
+  /*left: 27vh;*/
 
   width: 100px;
   height: 100px;
-
-  margin-top: -100px;
-  margin-left: -100px;
 
   perspective: 200px;
   /*transform-type: preserve-3d;*/
