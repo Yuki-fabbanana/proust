@@ -16,21 +16,18 @@
 
 ### 投稿
 
-1. 音楽を聴いて感動したら Proust ボタンを押してください。
-   <img width="142" alt="proust_button" src="https://user-images.githubusercontent.com/52590886/68454256-68a21480-023b-11ea-899b-fbcafa5e11bd.png" alt="proust_button" style="zoom:10%; display: inline-block">
+1. 音楽を聴いて感動したら Proust ボタンを押してください。<br>
+   <img width="142" alt="proust_button" src="https://user-images.githubusercontent.com/52590886/68454256-68a21480-023b-11ea-899b-fbcafa5e11bd.png" alt="proust_button" style="height: 20px; width: 20px; display: inline-block">
    Proust ボタン（このボタンを押すことで投稿に必要な情報の取得が行われます）
 2. 投稿に必要な情報がすべて取得できたら、投稿画面が表示されます。
    音楽を聴いた時に、感じた感動と、その時に見ていた景色や、その時の心情を表す画像を入力して、投稿ボタンを押してください。
-   ![スクリーンショット 2019-11-07 16.15.09](/Users/yuki/Desktop/スクリーンショット 2019-11-07 16.15.09.png)
+
+<img width="1434" alt="スクリーンショット 2019-11-07 16 15 09" src="https://user-images.githubusercontent.com/52590886/68457092-c84fee00-0242-11ea-8969-8b3ec7d57c37.png">
 3. 投稿された内容が地図上と、タイムライン上に表示されます。
 
 <img width="1435" alt="スクリーンショット 2019-10-29 12 26 50" src="https://user-images.githubusercontent.com/52590886/68454414-e1a16c00-023b-11ea-95df-a852e72fdf80.png">
 
-###### 投稿一覧画面（地図）
-
-   <img width="1440" alt="proust_time" src="https://user-images.githubusercontent.com/52590886/68454484-1c0b0900-023c-11ea-90ee-9b80aa470ed3.png">
-
-###### 投稿一覧画面（タイムライン）
+<img width="1440" alt="proust_time" src="https://user-images.githubusercontent.com/52590886/68454484-1c0b0900-023c-11ea-90ee-9b80aa470ed3.png">
 
 ### Proust Friends
 
@@ -41,8 +38,6 @@
 2.  Proust Friends!をクリックするとその曲についての、他のユーザーの投稿を見ることができます。
 
 <img width="1440" alt="スクリーンショット 2019-11-07 21 20 10" src="https://user-images.githubusercontent.com/52590886/68454730-e6b2eb00-023c-11ea-9951-d217e2afdabd.png">
-
-    ![スクリーンショット 2019-11-07 21.21.26](/Users/yuki/デスクトップ/動画/スクリーンショット 2019-11-07 21.21.26.png)
 
 <img width="1440" alt="スクリーンショット 2019-11-07 21 21 26" src="https://user-images.githubusercontent.com/52590886/68454801-1c57d400-023d-11ea-854a-809dcd3d6a98.png">
 
