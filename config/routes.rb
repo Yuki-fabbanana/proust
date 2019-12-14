@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get 'prousts/about', as: :about
 
   get 'prousts/new'
-  get 'prousts/rec', as: :proust_rec
   get 'prousts/:id/show', to: 'prousts#show', as: :proust_show
   get 'prousts/:id/common_posts_index', to: 'prousts#common_posts_index'
   get 'prousts/:id/common_posts_show', to: 'prousts#common_posts_show'
