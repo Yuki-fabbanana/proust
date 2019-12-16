@@ -95,9 +95,6 @@ class ProustsController < ApplicationController
     @post = Post.find(params[:id])
   end
 
-  def rec
-  end
-
   def convert
     params_file = params[:file]
     file_name = Digest::MD5.hexdigest(Time.now.to_s)
@@ -107,9 +104,8 @@ class ProustsController < ApplicationController
     mp3_file_path = Rails.root.to_s + "/tmp/songs/" + mp3_file_name
 
 
-    # 以下文tmpfileにした方がいい
     File.open(wav_file_path, 'wb') do |f|
-       f.write(params_file.tempfile.read.force_encoding("UTF-8"))
+      f.write(params_file.tempfile.read.force_encoding("UTF-8"))
     end
 
     system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
