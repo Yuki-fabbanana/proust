@@ -6,57 +6,54 @@ require 'date'
 require 'fileutils'
 require 'aws-sdk'
 
-
 class ProustsController < ApplicationController
-  skip_before_action:verify_authenticity_token
+  skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: [:about]
-  before_action :ensure_correct_user, {only: [:show, :destroy]}
+  before_action :ensure_correct_user, only: %i[show destroy]
 
-  def about
-  end
+  def about; end
 
   def new
-
     @params_post_info = Post.new
 
-    @params_post_address = address_params["address"]
-    @params_post_latitude = address_params["latitude"]
-    @params_post_longitude = address_params["longitude"]
-    @params_post_artist = address_params["artist"]
-    @params_post_album = address_params["album"]
-    @params_post_songs_title = address_params["songs_title"]
-    @params_post_release_date = address_params["release_date"]
-    @params_post_youtube_link = address_params["youtube_link"]
+    @params_post_address = address_params['address']
+    @params_post_latitude = address_params['latitude']
+    @params_post_longitude = address_params['longitude']
+    @params_post_artist = address_params['artist']
+    @params_post_album = address_params['album']
+    @params_post_songs_title = address_params['songs_title']
+    @params_post_release_date = address_params['release_date']
+    @params_post_youtube_link = address_params['youtube_link']
 
-    if address_params["artwork"].empty?
-      @params_post_artwork = "/images/168410.jpg"
-    else
-      @params_post_artwork = address_params["artwork"]
-    end
+    @params_post_artwork = if address_params['artwork'].empty?
+                             '/images/168410.jpg'
+                           else
+                             address_params['artwork']
+                           end
   end
 
   def create
     @params_post_info = Post.new(post_params)
     @params_post_info.user_id = current_user.id
-    @params_post_address = post_params["address"]
-    @params_post_latitude = post_params["latitude"]
-    @params_post_longitude = post_params["longitude"]
-    @params_post_artist = post_params["artist"]
-    @params_post_album = post_params["album"]
-    @params_post_songs_title = post_params["songs_title"]
-    @params_post_release_date = post_params["release_date"]
-    @params_post_youtube_link = post_params["youtube_link"]
+    @params_post_address = post_params['address']
+    @params_post_latitude = post_params['latitude']
+    @params_post_longitude = post_params['longitude']
+    @params_post_artist = post_params['artist']
+    @params_post_album = post_params['album']
+    @params_post_songs_title = post_params['songs_title']
+    @params_post_release_date = post_params['release_date']
+    @params_post_youtube_link = post_params['youtube_link']
 
-    if post_params["artwork"].empty?
-      @params_post_artwork = "/images/168410.jpg"
-    else
-      @params_post_artwork = post_params["artwork"]
-    end
+    @params_post_artwork = if post_params['artwork'].empty?
+                             '/images/168410.jpg'
+                           else
+                             post_params['artwork']
+                           end
 
     if @params_post_info.save
       redirect_to map_path
     else
-      render ("prousts/new")
+      render 'prousts/new'
     end
   end
 
@@ -74,7 +71,6 @@ class ProustsController < ApplicationController
     @scroll_posts = Post.where(user_id: current_user.id).order(created_at: :desc).page(params[:page]).per(10)
   end
 
-
   def show
     @post = Post.find(params[:id])
     v_param = @post.youtube_link.match(/v=.*$/).to_s
@@ -88,7 +84,7 @@ class ProustsController < ApplicationController
     gon.common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
     @common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title)
     @scroll_common_posts = Post.where.not(user_id: current_user.id).where(songs_title: songs_title).page(params[:page]).per(9)
-    @common_post= Post.find(params[:id])
+    @common_post = Post.find(params[:id])
   end
 
   def common_posts_show
@@ -97,33 +93,31 @@ class ProustsController < ApplicationController
 
   def convert
     params_file = params[:file]
-    file_name = Digest::MD5.hexdigest(Time.now.to_s)
-    wav_file_name = file_name + ".wav"
-    mp3_file_name = file_name + ".mp3"
-    wav_file_path = Rails.root.to_s + "/tmp/songs/" + wav_file_name
-    mp3_file_path = Rails.root.to_s + "/tmp/songs/" + mp3_file_name
-
+    file_name = Digest::MD5.hexdigest(Time.zone.now.to_s)
+    wav_file_name = file_name + '.wav'
+    mp3_file_name = file_name + '.mp3'
+    wav_file_path = Rails.root.to_s + '/tmp/songs/' + wav_file_name
+    mp3_file_path = Rails.root.to_s + '/tmp/songs/' + mp3_file_name
 
     File.open(wav_file_path, 'wb') do |f|
-      f.write(params_file.tempfile.read.force_encoding("UTF-8"))
+      f.write(params_file.tempfile.read.force_encoding('UTF-8'))
     end
 
-    system("ffmpeg -i \"" + wav_file_path + "\" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 \"" + mp3_file_path + "\"")
+    system('ffmpeg -i "' + wav_file_path + '" -vn -ac 2 -ar 44100 -ab 256k -acodec libmp3lame -f mp3 "' + mp3_file_path + '"')
 
     # AWS upload
-    region = "ap-northeast-1"
-    Aws.config.update({
-    credentials: Aws::Credentials.new(Rails.application.credentials.aws[:access_key_id],  Rails.application.credentials.aws[:secret_access_key])
-    })
+    region = 'ap-northeast-1'
+    Aws.config.update(
+      credentials: Aws::Credentials.new(Rails.application.credentials.aws[:access_key_id], Rails.application.credentials.aws[:secret_access_key])
+    )
 
     s3 = Aws::S3::Resource.new(region: region)
 
-    file = "#{Rails.root.to_s}/tmp/songs/#{mp3_file_name}"
+    file = "#{Rails.root}/tmp/songs/#{mp3_file_name}"
     bucket = 'proust-songs-database'
 
     # Get just the file name
     name = File.basename(file)
-
 
     # Create the object to upload
     obj = s3.bucket(bucket).object(name)
@@ -131,7 +125,7 @@ class ProustsController < ApplicationController
     # Upload it
     obj.upload_file(file)
 
-    #Delete WAV MP3 File
+    # Delete WAV MP3 File
     FileUtils.rm(wav_file_path)
     FileUtils.rm(mp3_file_path)
 
@@ -142,13 +136,11 @@ class ProustsController < ApplicationController
     object_key = name
     object_path = "http://#{bucket}.s3-ap-northeast-1.amazonaws.com/#{object_key}"
 
-
-    client.put_object_acl({
-    acl: "public-read",
-    bucket: bucket,
-    key: object_key,
-    })
-
+    client.put_object_acl(
+      acl: 'public-read',
+      bucket: bucket,
+      key: object_key
+    )
 
     # audDからjsonを取得
     url = URI("https://audd.p.rapidapi.com/?return=timecode%2Capple_music%2Cspotify%2Cdeezer%2Clyrics&spotify_country=ja&url=#{object_path}")
@@ -158,43 +150,38 @@ class ProustsController < ApplicationController
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     request = Net::HTTP::Get.new(url)
-    request["x-rapidapi-host"] = Rails.application.credentials.audd[:x_rapidapi_host]
-    request["x-rapidapi-key"] = Rails.application.credentials.audd[:x_rapidapi_key]
+    request['x-rapidapi-host'] = Rails.application.credentials.audd[:x_rapidapi_host]
+    request['x-rapidapi-key'] = Rails.application.credentials.audd[:x_rapidapi_key]
 
     response = http.request(request)
-    p "-----------------"
-    puts response.read_body.force_encoding("UTF-8")
-    p "-----------------"
 
     # 詳細見る必要あり
     @result = JSON.parse(response.read_body)
 
-    render :json => @result
+    render json: @result
   end
 
   private
 
   def ensure_correct_user
     post = Post.find(params[:id])
-    if post.user_id != current_user.id
-      redirect_to map_path
-    end
+    redirect_to map_path if post.user_id != current_user.id
   end
 
   def address_params
     params.permit(
-        :address,
-        :latitude,
-        :longitude,
-        :artist,
-        :songs_title,
-        :album,
-        :release_date,
-        :artwork,
-        :youtube_link,
-        :body,
-        :post_image
-      )
+      :address,
+      :latitude,
+      :longitude,
+      :artist,
+      :songs_title,
+      :album,
+      :release_date,
+      :artwork,
+      :youtube_link,
+      :body,
+      :post_image
+    )
   end
 
   def post_params
@@ -213,5 +200,4 @@ class ProustsController < ApplicationController
       :post_image
     )
   end
-
 end

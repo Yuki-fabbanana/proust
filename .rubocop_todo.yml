@@ -1,0 +1,10 @@
+Metrics/LineLength:
+  Max: 160
+
+Rails/LexicallyScopedActionFilter:
+  Exclude:
+    - 'app/controllers/users/registrations_controller.rb'
+
+Style/IfUnlessModifier:
+  Exclude:
+    - 'spec/rails_helper.rb'
