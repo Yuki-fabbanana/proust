@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=rails
 
 ### Rails ###
+.DS_store
 *.rbc
 capybara-*.html
 .rspec
