@@ -17,6 +17,15 @@
       <div class="actions">
         <%= f.submit "Sign in" %>
       </div>
+
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="field" style="margin-top: 15px;">
+        <%= f.hidden_field :email, value: "test@example.com" %>
+        <%= f.hidden_field :password, value: "password" %>
+        <%= f.submit "簡単ログイン" %>
+      </div>
     <% end %>
 
     <%= render "users/shared/links" %>
